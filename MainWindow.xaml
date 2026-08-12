@@ -793,27 +793,27 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="协议辅助（二期）">
+            <TabItem Header="协议辅助">
                 <ScrollViewer Margin="0,8,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
-                        <GroupBox Header="FR-27 · 数据流分帧显示" Margin="0,0,0,10">
+                        <GroupBox Header="数据流分帧显示" Margin="0,0,0,10">
                             <StackPanel>
                                 <WrapPanel Margin="0,0,0,8">
-                                    <TextBlock Text="分帧方式" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock Text="分帧方式" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                     <ComboBox ItemsSource="{Binding FrameModes}" SelectedItem="{Binding SelectedFrameMode}"
                                               ItemTemplate="{StaticResource LocalizedEnumItemTemplate}" Width="175" Margin="0,0,14,0"/>
 
-                                    <TextBlock Text="固定长度" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock Text="固定长度" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                     <TextBox Text="{Binding FrameFixedLength, UpdateSourceTrigger=PropertyChanged}" Width="75" Margin="0,0,4,0"/>
                                     <TextBlock Text="字节" Margin="0,0,14,0"/>
 
-                                    <TextBlock Text="分隔符" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock Text="分隔符" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                     <TextBox Text="{Binding FrameDelimiterText, UpdateSourceTrigger=PropertyChanged}" Width="145" Margin="0,0,6,0"
                                              FontFamily="Consolas" ToolTip="HEX示例：0D 0A；文本模式可输入任意UTF-8文本"/>
                                     <RadioButton Content="HEX" IsChecked="{Binding IsFrameDelimiterHex}" Margin="0,0,7,0"/>
                                     <RadioButton Content="文本" IsChecked="{Binding IsFrameDelimiterText}" Margin="0,0,14,0"/>
 
-                                    <TextBlock Text="空闲间隔" Style="{StaticResource FieldLabel}"/>
+                                    <TextBlock Text="空闲间隔" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                     <TextBox Text="{Binding FrameIdleMilliseconds, UpdateSourceTrigger=PropertyChanged}" Width="75" Margin="0,0,4,0"/>
                                     <TextBlock Text="ms" Margin="0,0,14,0"/>
 
@@ -839,7 +839,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <GroupBox Grid.Column="0" Header="FR-28 · CRC校验计算">
+                            <GroupBox Grid.Column="0" Header="CRC校验计算">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -848,11 +848,11 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <WrapPanel Grid.Row="0" Margin="0,0,0,7">
-                                        <TextBlock Text="算法" Style="{StaticResource FieldLabel}"/>
+                                        <TextBlock Text="算法" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                         <ComboBox ItemsSource="{Binding ChecksumAlgorithms}" SelectedItem="{Binding SelectedChecksumAlgorithm}"
                                                   ItemTemplate="{StaticResource LocalizedEnumItemTemplate}" Width="190" Margin="0,0,12,0"/>
-                                        <RadioButton Content="HEX输入" IsChecked="{Binding IsChecksumInputHex}" Margin="0,0,8,0"/>
-                                        <RadioButton Content="文本输入" IsChecked="{Binding IsChecksumInputText}"/>
+                                        <RadioButton Content="HEX输入" VerticalAlignment="Center" IsChecked="{Binding IsChecksumInputHex}" Margin="0,0,8,0"/>
+                                        <RadioButton Content="文本输入" VerticalAlignment="Center" IsChecked="{Binding IsChecksumInputText}"/>
                                     </WrapPanel>
                                     <TextBox Grid.Row="1" Text="{Binding ChecksumInput, UpdateSourceTrigger=PropertyChanged}"
                                              FontFamily="Consolas" AcceptsReturn="True" TextWrapping="Wrap"
@@ -865,7 +865,7 @@
                                 </Grid>
                             </GroupBox>
 
-                            <GroupBox Grid.Column="2" Header="FR-29 · 协议解析插件">
+                            <GroupBox Grid.Column="2" Header="协议解析插件">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -876,7 +876,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <WrapPanel Grid.Row="0" Margin="0,0,0,5">
-                                        <TextBlock Text="解析器" Style="{StaticResource FieldLabel}"/>
+                                        <TextBlock Text="解析器" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                         <ComboBox ItemsSource="{Binding ProtocolParsers}" SelectedItem="{Binding SelectedProtocolParser}"
                                                   DisplayMemberPath="Name" Width="190" Margin="0,0,8,0"/>
                                         <Button Content="重新加载插件" Command="{Binding ReloadProtocolPluginsCommand}" MinHeight="27" Padding="9,3"/>
@@ -893,7 +893,7 @@
                                     </WrapPanel>
                                     <TextBox Grid.Row="4" Text="{Binding ProtocolParseOutput}" IsReadOnly="True"
                                              FontFamily="Consolas" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                             MinHeight="92" Padding="7" Background="#F8FAFC"/>
+                                             MinHeight="70" Padding="7" Background="#F8FAFC"/>
                                     <TextBlock Grid.Row="5" Text="{Binding ProtocolPluginStatus}" Foreground="{StaticResource MutedTextBrush}"
                                                TextWrapping="Wrap" Margin="0,6,0,0"/>
                                 </Grid>
