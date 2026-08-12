@@ -35,7 +35,6 @@ namespace WpfProtocolStudio.ViewModels
         private CancellationTokenSource _fileSendCts;
         private readonly FileTransferReceiver _fileReceiver = new FileTransferReceiver();
         private readonly RawBurstFileReceiver _rawBurstFileReceiver = new RawBurstFileReceiver();
-        private readonly DataFramingService _dataFramingService = new DataFramingService();
         private string _rxFileDirectory;
         private string[] _historySelectedFiles = new string[0];
         private bool _disposed;
@@ -296,81 +295,6 @@ namespace WpfProtocolStudio.ViewModels
             get => _isDisplayPaused;
             set => SetProperty(ref _isDisplayPaused, value);
         }
-
-        // FR-27 显示分帧配置。四个数据方向共用配置，但各自独立缓存。
-        public Array FrameModes => Enum.GetValues(typeof(FrameMode));
-        private FrameMode _selectedFrameMode = FrameMode.None;
-        public FrameMode SelectedFrameMode { get => _selectedFrameMode; set => SetProperty(ref _selectedFrameMode, value); }
-        private int _frameFixedLength = 8;
-        public int FrameFixedLength { get => _frameFixedLength; set => SetProperty(ref _frameFixedLength, value); }
-        private string _frameDelimiterText = "0D 0A";
-        public string FrameDelimiterText { get => _frameDelimiterText; set => SetProperty(ref _frameDelimiterText, value); }
-        private bool _isFrameDelimiterHex = true;
-        public bool IsFrameDelimiterHex
-        {
-            get => _isFrameDelimiterHex;
-            set
-            {
-                if (SetProperty(ref _isFrameDelimiterHex, value))
-                    OnPropertyChanged(nameof(IsFrameDelimiterText));
-            }
-        }
-        public bool IsFrameDelimiterText { get => !IsFrameDelimiterHex; set => IsFrameDelimiterHex = !value; }
-        private int _frameIdleMilliseconds = 50;
-        public int FrameIdleMilliseconds { get => _frameIdleMilliseconds; set => SetProperty(ref _frameIdleMilliseconds, value); }
-        private string _frameConfigurationStatus = "当前按底层接收块显示，尚未启用重新分帧";
-        public string FrameConfigurationStatus { get => _frameConfigurationStatus; set => SetProperty(ref _frameConfigurationStatus, value); }
-
-        // FR-28 CRC辅助计算。
-        public Array ChecksumAlgorithms => Enum.GetValues(typeof(ChecksumAlgorithm));
-        private ChecksumAlgorithm _selectedChecksumAlgorithm = ChecksumAlgorithm.Crc16Modbus;
-        public ChecksumAlgorithm SelectedChecksumAlgorithm { get => _selectedChecksumAlgorithm; set => SetProperty(ref _selectedChecksumAlgorithm, value); }
-        private string _checksumInput = "01 03 00 00 00 02";
-        public string ChecksumInput { get => _checksumInput; set => SetProperty(ref _checksumInput, value); }
-        private bool _isChecksumInputHex = true;
-        public bool IsChecksumInputHex
-        {
-            get => _isChecksumInputHex;
-            set
-            {
-                if (SetProperty(ref _isChecksumInputHex, value))
-                    OnPropertyChanged(nameof(IsChecksumInputText));
-            }
-        }
-        public bool IsChecksumInputText { get => !IsChecksumInputHex; set => IsChecksumInputHex = !value; }
-        private string _checksumResult = "等待计算";
-        public string ChecksumResult { get => _checksumResult; set => SetProperty(ref _checksumResult, value); }
-
-        // FR-29 协议解析插件。
-        public ObservableCollection<IProtocolParser> ProtocolParsers { get; } = new ObservableCollection<IProtocolParser>();
-        private IProtocolParser _selectedProtocolParser;
-        public IProtocolParser SelectedProtocolParser
-        {
-            get => _selectedProtocolParser;
-            set
-            {
-                if (SetProperty(ref _selectedProtocolParser, value))
-                    OnPropertyChanged(nameof(SelectedProtocolParserDescription));
-            }
-        }
-        public string SelectedProtocolParserDescription => SelectedProtocolParser?.Description ?? "请选择协议解析器";
-        private string _protocolInput = "01 03 00 00 00 02";
-        public string ProtocolInput { get => _protocolInput; set => SetProperty(ref _protocolInput, value); }
-        private bool _isProtocolInputHex = true;
-        public bool IsProtocolInputHex
-        {
-            get => _isProtocolInputHex;
-            set
-            {
-                if (SetProperty(ref _isProtocolInputHex, value))
-                    OnPropertyChanged(nameof(IsProtocolInputText));
-            }
-        }
-        public bool IsProtocolInputText { get => !IsProtocolInputHex; set => IsProtocolInputHex = !value; }
-        private string _protocolParseOutput = "等待解析";
-        public string ProtocolParseOutput { get => _protocolParseOutput; set => SetProperty(ref _protocolParseOutput, value); }
-        private string _protocolPluginStatus = "尚未加载协议插件";
-        public string ProtocolPluginStatus { get => _protocolPluginStatus; set => SetProperty(ref _protocolPluginStatus, value); }
 
         private string _filterKeyword = string.Empty;
 
@@ -706,11 +630,6 @@ namespace WpfProtocolStudio.ViewModels
         public ICommand SelectReceivedFilesDirectoryCommand { get; }
         public ICommand ResetChannelAStatisticsCommand { get; }
         public ICommand ResetChannelBStatisticsCommand { get; }
-        public ICommand ApplyFramingCommand { get; }
-        public ICommand FlushFramesCommand { get; }
-        public ICommand CalculateChecksumCommand { get; }
-        public ICommand ParseProtocolCommand { get; }
-        public ICommand ReloadProtocolPluginsCommand { get; }
 
         private ICommunicationChannel _channelAObj;
         private ICommunicationChannel _channelBObj;
@@ -726,7 +645,6 @@ namespace WpfProtocolStudio.ViewModels
 
             Engine.DataForwarded += OnDataForwarded;
             Engine.ChannelDisconnectedNotice += OnChannelDisconnectedNotice;
-            _dataFramingService.FrameReady += OnDisplayFrameReady;
             Engine.StrategyOnDisconnect = SelectedDisconnectStrategy;
             _fileReceiver.OutputDirectory = ReceivedFilesDirectory;
             _fileReceiver.FileStarted += OnFileReceiveStarted;
@@ -766,11 +684,6 @@ namespace WpfProtocolStudio.ViewModels
             SelectReceivedFilesDirectoryCommand = new RelayCommand(ExecuteSelectReceivedFilesDirectory);
             ResetChannelAStatisticsCommand = new RelayCommand(ExecuteResetChannelAStatistics);
             ResetChannelBStatisticsCommand = new RelayCommand(ExecuteResetChannelBStatistics);
-            ApplyFramingCommand = new RelayCommand(ExecuteApplyFraming);
-            FlushFramesCommand = new RelayCommand(() => _dataFramingService.FlushAll());
-            CalculateChecksumCommand = new RelayCommand(ExecuteCalculateChecksum);
-            ParseProtocolCommand = new RelayCommand(ExecuteParseProtocol);
-            ReloadProtocolPluginsCommand = new RelayCommand(ReloadProtocolPlugins);
             OpenLogFolderCommand = new RelayCommand(() =>
             {
                 string logDir = string.IsNullOrEmpty(AutoSaveLogDirectory) ? System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs") : AutoSaveLogDirectory;
@@ -791,7 +704,6 @@ namespace WpfProtocolStudio.ViewModels
             _uiFlushTimer.Tick += (s, e) => FlushPendingUiRecords();
             _uiFlushTimer.Start();
 
-            ReloadProtocolPlugins();
         }
 
         /// <summary>
@@ -1828,180 +1740,6 @@ namespace WpfProtocolStudio.ViewModels
             }
         }
 
-        private void ExecuteApplyFraming()
-        {
-            if (FrameFixedLength < 1 || FrameFixedLength > 1024 * 1024)
-            {
-                MessageBox.Show("固定帧长必须在 1～1,048,576 字节之间。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (FrameIdleMilliseconds < 1 || FrameIdleMilliseconds > 60000)
-            {
-                MessageBox.Show("时间间隔必须在 1～60,000 毫秒之间。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            byte[] delimiter;
-            if (!TryConvertToolInput(FrameDelimiterText, IsFrameDelimiterHex, out delimiter, out string errorMessage))
-            {
-                MessageBox.Show($"分隔符无效：{errorMessage}", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (delimiter.Length > 256)
-            {
-                MessageBox.Show("分隔符不能超过 256 字节。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            _dataFramingService.Configure(SelectedFrameMode, FrameFixedLength, delimiter, FrameIdleMilliseconds);
-            switch (SelectedFrameMode)
-            {
-                case FrameMode.FixedLength:
-                    FrameConfigurationStatus = $"已启用固定长度分帧：每帧 {FrameFixedLength} 字节";
-                    break;
-                case FrameMode.Delimiter:
-                    FrameConfigurationStatus = $"已启用分隔符分帧：{BitConverter.ToString(delimiter).Replace("-", " ")}（分隔符包含在帧尾）";
-                    break;
-                case FrameMode.TimeInterval:
-                    FrameConfigurationStatus = $"已启用时间分帧：连续空闲 {FrameIdleMilliseconds} ms 后输出一帧";
-                    break;
-                default:
-                    FrameConfigurationStatus = "已关闭重新分帧，按底层接收块显示";
-                    break;
-            }
-        }
-
-        private void ExecuteCalculateChecksum()
-        {
-            if (!TryConvertToolInput(ChecksumInput, IsChecksumInputHex, out byte[] data, out string errorMessage))
-            {
-                ChecksumResult = "输入错误：" + errorMessage;
-                return;
-            }
-
-            try
-            {
-                string value = ChecksumService.Calculate(SelectedChecksumAlgorithm, data);
-                ChecksumResult = $"{value}  （{data.Length} 字节）";
-            }
-            catch (Exception ex)
-            {
-                ChecksumResult = "计算失败：" + ex.Message;
-            }
-        }
-
-        private void ReloadProtocolPlugins()
-        {
-            string selectedName = SelectedProtocolParser?.Name;
-            string pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
-            ProtocolPluginLoadResult loadResult = ProtocolPluginService.Load(pluginDirectory);
-
-            ProtocolParsers.Clear();
-            foreach (IProtocolParser parser in loadResult.Parsers) ProtocolParsers.Add(parser);
-            SelectedProtocolParser = ProtocolParsers.FirstOrDefault(parser =>
-                string.Equals(parser.Name, selectedName, StringComparison.OrdinalIgnoreCase))
-                ?? ProtocolParsers.FirstOrDefault();
-
-            ProtocolPluginStatus = loadResult.Errors.Count == 0
-                ? $"已加载 {ProtocolParsers.Count} 个解析器；插件目录：{pluginDirectory}"
-                : $"已加载 {ProtocolParsers.Count} 个解析器；{loadResult.Errors.Count} 个插件失败：{string.Join("；", loadResult.Errors)}";
-        }
-
-        private void ExecuteParseProtocol()
-        {
-            if (SelectedProtocolParser == null)
-            {
-                ProtocolParseOutput = "请先选择协议解析器。";
-                return;
-            }
-            if (!TryConvertToolInput(ProtocolInput, IsProtocolInputHex, out byte[] data, out string errorMessage))
-            {
-                ProtocolParseOutput = "输入错误：" + errorMessage;
-                return;
-            }
-
-            try
-            {
-                if (!SelectedProtocolParser.CanParse(data))
-                {
-                    ProtocolParseOutput = $"“{SelectedProtocolParser.Name}”不能解析当前数据。";
-                    return;
-                }
-
-                ProtocolParseResult result = SelectedProtocolParser.Parse(data);
-                if (result == null)
-                {
-                    ProtocolParseOutput = "解析器未返回结果。";
-                    return;
-                }
-
-                var builder = new StringBuilder();
-                builder.AppendLine(result.Success ? "解析成功" : "解析失败");
-                if (!string.IsNullOrWhiteSpace(result.Summary)) builder.AppendLine(result.Summary);
-                if (result.Fields != null)
-                {
-                    foreach (KeyValuePair<string, string> field in result.Fields)
-                        builder.AppendLine($"{field.Key}: {field.Value}");
-                }
-                ProtocolParseOutput = builder.ToString().TrimEnd();
-            }
-            catch (Exception ex)
-            {
-                ProtocolParseOutput = $"插件“{SelectedProtocolParser.Name}”解析异常：{ex.Message}";
-            }
-        }
-
-        private static bool TryConvertToolInput(string input, bool isHex, out byte[] data, out string errorMessage)
-        {
-            data = null;
-            errorMessage = string.Empty;
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                errorMessage = "输入不能为空";
-                return false;
-            }
-
-            if (!isHex)
-            {
-                data = Encoding.UTF8.GetBytes(input);
-                return true;
-            }
-
-            string clean = new string(input.Where(character => !char.IsWhiteSpace(character) && character != '-').ToArray());
-            if (clean.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) clean = clean.Substring(2);
-            if (clean.Length == 0 || clean.Length % 2 != 0)
-            {
-                errorMessage = "HEX必须由完整的两位字节组成";
-                return false;
-            }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(clean, "^[0-9a-fA-F]+$"))
-            {
-                errorMessage = "HEX只能包含0-9、A-F、空格或短横线";
-                return false;
-            }
-
-            try
-            {
-                data = new byte[clean.Length / 2];
-                for (int index = 0; index < data.Length; index++)
-                    data[index] = Convert.ToByte(clean.Substring(index * 2, 2), 16);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-                return false;
-            }
-        }
-
-        private void OnDisplayFrameReady(object sender, ForwardingDataEventArgs e)
-        {
-            if (IsDisplayPaused || _disposed) return;
-            _pendingUiRecords.Enqueue(e);
-            int pendingCount = Interlocked.Increment(ref _pendingUiRecordCount);
-            while (pendingCount > MaxPendingUiRecords && _pendingUiRecords.TryDequeue(out _))
-                pendingCount = Interlocked.Decrement(ref _pendingUiRecordCount);
-        }
         /// <summary>
         /// 处理数据转发事件
         /// </summary>
@@ -2034,9 +1772,12 @@ namespace WpfProtocolStudio.ViewModels
                 //1、将记录送至后台队列
                 LogService.Enqueue(e);
             }
-            // 2、仅显示链路进行FR-27分帧；转发、日志和原始文件仍使用原始数据块。
+            // 2、将原始记录送入界面刷新队列。
             if (IsDisplayPaused) return;
-            _dataFramingService.Process(e);
+            _pendingUiRecords.Enqueue(e);
+            int pendingCount = Interlocked.Increment(ref _pendingUiRecordCount);
+            while (pendingCount > MaxPendingUiRecords && _pendingUiRecords.TryDequeue(out _))
+                pendingCount = Interlocked.Decrement(ref _pendingUiRecordCount);
         }
 
         private SingleChannelConfig CreateChannelConfig(bool isChannelA)
@@ -2199,8 +1940,6 @@ namespace WpfProtocolStudio.ViewModels
             _fileReceiver.FileFailed -= OnFileReceiveFailed;
             _rawBurstFileReceiver.FileCompleted -= OnFileReceiveCompleted;
             _rawBurstFileReceiver.FileFailed -= OnFileReceiveFailed;
-            _dataFramingService.FrameReady -= OnDisplayFrameReady;
-            _dataFramingService.Dispose();
             _rawBurstFileReceiver.Dispose();
             _fileReceiver.Dispose();
             Engine.DataForwarded -= OnDataForwarded;
