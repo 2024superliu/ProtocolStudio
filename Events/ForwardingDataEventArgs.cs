@@ -29,6 +29,16 @@ namespace WpfProtocolStudio.Events
         /// </summary>
         public string Description { get; }
 
+        /// <summary>
+        /// 接收完整帧的CRC验证结果；null表示未执行自动验证。
+        /// </summary>
+        public bool? IsChecksumValid { get; set; }
+
+        /// <summary>
+        /// CRC通过后剥离校验字节的有效载荷，供协议解析器使用。
+        /// </summary>
+        public byte[] VerifiedPayload { get; set; }
+
         public ForwardingDataEventArgs(DataDirection direction, byte[] data,string description = "")
         {
             Timestamp = DateTime.Now;

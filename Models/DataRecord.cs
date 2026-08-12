@@ -17,6 +17,10 @@ namespace WpfProtocolStudio.Models
         public byte[] RawData { get; set; }
         public int Length => RawData?.Length ?? 0;
         public string Description { get; set; }
+        public bool? IsChecksumValid { get; set; }
+        public string ChecksumStatusText => !IsChecksumValid.HasValue
+            ? "—"
+            : IsChecksumValid.Value ? "CRC OK" : "CRC 错误";
         public string TimeString => Timestamp.ToString("HH:mm:ss.fff");
         // 保存这一次数据的快照
         public DisplayFormat RecordFormat { get; set; } = DisplayFormat.Hex;

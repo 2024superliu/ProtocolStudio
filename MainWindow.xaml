@@ -564,6 +564,18 @@
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,48,160"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
+                                    <Setter Property="Background" Value="#EAF8F0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
+                                    <Setter Property="Background" Value="#FDECEC"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
@@ -640,6 +652,18 @@
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,48,160"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
+                                    <Setter Property="Background" Value="#EAF8F0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
+                                    <Setter Property="Background" Value="#FDECEC"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
@@ -855,10 +879,32 @@
                                     <TextBox Grid.Row="1" Text="{Binding ChecksumInput, UpdateSourceTrigger=PropertyChanged}"
                                              FontFamily="Consolas" AcceptsReturn="True" TextWrapping="Wrap"
                                              VerticalScrollBarVisibility="Auto" Padding="6"/>
-                                    <Button Grid.Row="2" Content="计算校验值" Command="{Binding CalculateChecksumCommand}"
-                                            Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,8,0,7"/>
+                                    <WrapPanel Grid.Row="2" Margin="0,8,0,7">
+                                        <Button Content="计算校验值" Command="{Binding CalculateChecksumCommand}"
+                                                Style="{StaticResource PrimaryButton}" Margin="0,0,7,0"/>
+                                        <Button Content="验证报文末尾" Command="{Binding VerifyChecksumCommand}"
+                                                Padding="10,4" ToolTip="HEX输入完整报文，自动核对末尾2字节或4字节校验值"/>
+                                    </WrapPanel>
                                     <Border Grid.Row="3" Background="#F4F7FB" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,8">
-                                        <TextBlock Text="{Binding ChecksumResult}" FontFamily="Consolas" FontSize="14" FontWeight="Bold" Foreground="#3046A5" TextWrapping="Wrap"/>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding ChecksumResult}" FontFamily="Consolas" FontSize="14" FontWeight="Bold" Foreground="#3046A5" TextWrapping="Wrap"/>
+                                            <Separator Margin="0,7"/>
+                                            <WrapPanel>
+                                                <CheckBox Content="自动校验接收CRC" IsChecked="{Binding IsAutoReceiveChecksumEnabled}"
+                                                          FontWeight="SemiBold" Foreground="#138568" Margin="0,0,10,0"/>
+                                                <TextBlock Text="算法" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
+                                                <ComboBox ItemsSource="{Binding ChecksumAlgorithms}" SelectedItem="{Binding SelectedReceiveChecksumAlgorithm}"
+                                                          ItemTemplate="{StaticResource LocalizedEnumItemTemplate}" Width="178" Margin="0,0,10,0"/>
+                                                <CheckBox Content="高字节在前" IsChecked="{Binding IsReceiveChecksumHighByteFirst}"
+                                                          Margin="0,0,10,0" ToolTip="勾选：47 34；不勾选：34 47。标准Modbus RTU通常不勾选。"/>
+                                                <CheckBox Content="丢弃错误帧（显示/解析）" IsChecked="{Binding HideInvalidChecksumFrames}"
+                                                          Foreground="#D9364F" Margin="0,0,10,0"/>
+                                                <Button Content="重置计数" Command="{Binding ResetCrcValidationStatisticsCommand}" Padding="8,2"/>
+                                            </WrapPanel>
+                                            <TextBlock Text="{Binding CrcValidationSummary}" Margin="0,6,0,0" FontWeight="SemiBold"/>
+                                            <TextBlock Text="仅验证A-RX/B-RX的完整分帧；隐藏错误帧只影响界面和协议解析，不改变透明转发与原始日志。"
+                                                       Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                        </StackPanel>
                                     </Border>
                                 </Grid>
                             </GroupBox>
@@ -868,9 +914,12 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="75"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="150"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <WrapPanel Grid.Row="0" Margin="0,0,0,5">
@@ -878,22 +927,54 @@
                                         <ComboBox ItemsSource="{Binding ProtocolParsers}" SelectedItem="{Binding SelectedProtocolParser}"
                                                   DisplayMemberPath="Name" Width="190" Margin="0,0,8,0"/>
                                         <Button Content="重新加载插件" Command="{Binding ReloadProtocolPluginsCommand}" MinHeight="27" Padding="9,3"/>
+                                        <Button Content="打开插件目录" Command="{Binding OpenProtocolPluginFolderCommand}"
+                                                MinHeight="27" Padding="9,3" Margin="6,0,0,0"/>
+                                        <CheckBox Content="实时解析" IsChecked="{Binding IsRealtimeProtocolParsingEnabled}"
+                                                  VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="SemiBold" Foreground="#138568"/>
                                     </WrapPanel>
-                                    <TextBlock Grid.Row="1" Text="{Binding SelectedProtocolParserDescription}" Foreground="{StaticResource MutedTextBrush}"
+                                    <Border Grid.Row="1" Background="#F4F7FB" BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1" CornerRadius="4" Padding="7,4" Margin="0,0,0,5">
+                                        <TextBlock Text="{Binding ProtocolPluginStatus}" Foreground="#52637A" TextWrapping="Wrap"/>
+                                    </Border>
+                                    <TextBlock Grid.Row="2" Text="{Binding SelectedProtocolParserDescription}" Foreground="{StaticResource MutedTextBrush}"
                                                TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                    <TextBox Grid.Row="2" Text="{Binding ProtocolInput, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Grid.Row="3" Text="{Binding ProtocolInput, UpdateSourceTrigger=PropertyChanged}"
                                              FontFamily="Consolas" AcceptsReturn="True" TextWrapping="Wrap"
                                              VerticalScrollBarVisibility="Auto" Padding="6"/>
-                                    <WrapPanel Grid.Row="3" Margin="0,7,0,7">
+                                    <WrapPanel Grid.Row="4" Margin="0,7,0,7">
                                         <RadioButton Content="HEX输入" IsChecked="{Binding IsProtocolInputHex}" Margin="0,0,8,0"/>
                                         <RadioButton Content="文本输入" IsChecked="{Binding IsProtocolInputText}" Margin="0,0,12,0"/>
                                         <Button Content="解析数据" Command="{Binding ParseProtocolCommand}" Style="{StaticResource PrimaryButton}" MinHeight="27" Padding="12,3"/>
                                     </WrapPanel>
-                                    <TextBox Grid.Row="4" Text="{Binding ProtocolParseOutput}" IsReadOnly="True"
+                                    <TextBox Grid.Row="5" Text="{Binding ProtocolParseOutput}" IsReadOnly="True"
                                              FontFamily="Consolas" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
                                              MinHeight="70" Padding="7" Background="#F8FAFC"/>
-                                    <TextBlock Grid.Row="5" Text="{Binding ProtocolPluginStatus}" Foreground="{StaticResource MutedTextBrush}"
-                                               TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                    <DockPanel Grid.Row="6" Margin="0,7,0,5">
+                                        <TextBlock Text="实时解析结果（来自分帧后的数据）" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <Button Content="清空" Command="{Binding ClearRealtimeProtocolResultsCommand}"
+                                                DockPanel.Dock="Right" HorizontalAlignment="Right" Padding="9,2"/>
+                                    </DockPanel>
+                                    <DataGrid Grid.Row="7" ItemsSource="{Binding RealtimeProtocolResults}" AutoGenerateColumns="False"
+                                              IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False"
+                                              EnableRowVirtualization="True" VirtualizingPanel.IsVirtualizing="True"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="时间" Binding="{Binding TimeString}" Width="92"/>
+                                            <DataGridTextColumn Header="方向" Binding="{Binding DirectionText}" Width="67"/>
+                                            <DataGridTextColumn Header="解析器" Binding="{Binding ParserName}" Width="110"/>
+                                            <DataGridTextColumn Header="解析结果" Binding="{Binding DisplayText}" Width="*">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="ToolTip" Value="{Binding RawHex}"/>
+                                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                            </DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <StackPanel Grid.Row="8" Margin="0,5,0,0">
+                                        <TextBlock Text="{Binding RealtimeProtocolStatus}" Foreground="#138568" TextWrapping="Wrap"/>
+                                    </StackPanel>
                                 </Grid>
                             </GroupBox>
                         </Grid>
@@ -991,6 +1072,10 @@
             <Separator Margin="7,0"/>
             <StatusBarItem>
                 <TextBlock Text="{Binding ForwardingStatusText}" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+            </StatusBarItem>
+            <Separator Margin="7,0"/>
+            <StatusBarItem>
+                <TextBlock Text="{Binding CrcValidationSummary}" FontWeight="SemiBold" Foreground="#52637A"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

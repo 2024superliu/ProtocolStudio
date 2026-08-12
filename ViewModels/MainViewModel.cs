@@ -25,12 +25,25 @@ namespace WpfProtocolStudio.ViewModels
 {
     public class MainViewModel : ViewModelBase, IDisposable
     {
+        private sealed class ProtocolParseWorkItem
+        {
+            public DateTime Timestamp { get; set; }
+            public DataDirection Direction { get; set; }
+            public byte[] Data { get; set; }
+            public IProtocolParser Parser { get; set; }
+        }
+
         public ForwardingEngine Engine { get; } = new ForwardingEngine();
         public LogService LogService { get; } = new LogService();
         private readonly DispatcherTimer _statsTimer;
         private readonly DispatcherTimer _uiFlushTimer;
         private readonly ConcurrentQueue<ForwardingDataEventArgs> _pendingUiRecords = new ConcurrentQueue<ForwardingDataEventArgs>();
         private int _pendingUiRecordCount;
+        private readonly ConcurrentQueue<ProtocolParseWorkItem> _protocolParseQueue = new ConcurrentQueue<ProtocolParseWorkItem>();
+        private readonly SemaphoreSlim _protocolParseSignal = new SemaphoreSlim(0);
+        private readonly CancellationTokenSource _protocolParseCts = new CancellationTokenSource();
+        private Task _protocolParseWorker;
+        private int _protocolParseQueueCount;
         private CancellationTokenSource _historySearchCts;
         private CancellationTokenSource _fileSendCts;
         private readonly FileTransferReceiver _fileReceiver = new FileTransferReceiver();
@@ -45,6 +58,7 @@ namespace WpfProtocolStudio.ViewModels
         public RangeObservableCollection<DataRecord> ChannelBRxRecords { get; } = new RangeObservableCollection<DataRecord>();
         public RangeObservableCollection<DataRecord> ChannelBTxRecords { get; } = new RangeObservableCollection<DataRecord>();
         public RangeObservableCollection<HistoryDataRecord> HistorySearchResults { get; } = new RangeObservableCollection<HistoryDataRecord>();
+        public RangeObservableCollection<ProtocolDecodedRecord> RealtimeProtocolResults { get; } = new RangeObservableCollection<ProtocolDecodedRecord>();
         // 可选通信类型与串口全参数下拉列表
         public Array ChannelTypes => Enum.GetValues(typeof(ChannelType));
         public string[] AvailablePorts
@@ -377,6 +391,54 @@ namespace WpfProtocolStudio.ViewModels
         private string _checksumResult = "等待计算";
         public string ChecksumResult { get => _checksumResult; set => SetProperty(ref _checksumResult, value); }
 
+        private bool _isAutoReceiveChecksumEnabled;
+        public bool IsAutoReceiveChecksumEnabled
+        {
+            get => _isAutoReceiveChecksumEnabled;
+            set
+            {
+                if (SetProperty(ref _isAutoReceiveChecksumEnabled, value))
+                    OnPropertyChanged(nameof(CrcValidationSummary));
+            }
+        }
+
+        private bool _hideInvalidChecksumFrames;
+        public bool HideInvalidChecksumFrames
+        {
+            get => _hideInvalidChecksumFrames;
+            set => SetProperty(ref _hideInvalidChecksumFrames, value);
+        }
+
+        private ChecksumAlgorithm _selectedReceiveChecksumAlgorithm = ChecksumAlgorithm.Crc16Modbus;
+        public ChecksumAlgorithm SelectedReceiveChecksumAlgorithm
+        {
+            get => _selectedReceiveChecksumAlgorithm;
+            set
+            {
+                if (SetProperty(ref _selectedReceiveChecksumAlgorithm, value))
+                    ExecuteResetCrcValidationStatistics();
+            }
+        }
+
+        private bool _isReceiveChecksumHighByteFirst;
+        public bool IsReceiveChecksumHighByteFirst
+        {
+            get => _isReceiveChecksumHighByteFirst;
+            set
+            {
+                if (SetProperty(ref _isReceiveChecksumHighByteFirst, value))
+                    ExecuteResetCrcValidationStatistics();
+            }
+        }
+
+        private long _crcValidFrameCount;
+        private long _crcInvalidFrameCount;
+        public long CrcValidFrameCount => Interlocked.Read(ref _crcValidFrameCount);
+        public long CrcInvalidFrameCount => Interlocked.Read(ref _crcInvalidFrameCount);
+        public string CrcValidationSummary => IsAutoReceiveChecksumEnabled
+            ? $"CRC正确: {CrcValidFrameCount} 帧 | CRC错误: {CrcInvalidFrameCount} 帧"
+            : "接收CRC自动验证：未启用";
+
         // FR-29 协议解析插件。
         public ObservableCollection<IProtocolParser> ProtocolParsers { get; } = new ObservableCollection<IProtocolParser>();
         private IProtocolParser _selectedProtocolParser;
@@ -386,7 +448,11 @@ namespace WpfProtocolStudio.ViewModels
             set
             {
                 if (SetProperty(ref _selectedProtocolParser, value))
+                {
                     OnPropertyChanged(nameof(SelectedProtocolParserDescription));
+                    if (IsRealtimeProtocolParsingEnabled)
+                        RealtimeProtocolStatus = $"实时解析已启用：{value?.Name ?? "尚未选择解析器"}";
+                }
             }
         }
         public string SelectedProtocolParserDescription => SelectedProtocolParser?.Description ?? "请选择协议解析器";
@@ -407,6 +473,28 @@ namespace WpfProtocolStudio.ViewModels
         public string ProtocolParseOutput { get => _protocolParseOutput; set => SetProperty(ref _protocolParseOutput, value); }
         private string _protocolPluginStatus = "尚未加载协议插件";
         public string ProtocolPluginStatus { get => _protocolPluginStatus; set => SetProperty(ref _protocolPluginStatus, value); }
+
+        private bool _isRealtimeProtocolParsingEnabled;
+        public bool IsRealtimeProtocolParsingEnabled
+        {
+            get => _isRealtimeProtocolParsingEnabled;
+            set
+            {
+                if (SetProperty(ref _isRealtimeProtocolParsingEnabled, value))
+                {
+                    RealtimeProtocolStatus = value
+                        ? $"实时解析已启用：{SelectedProtocolParser?.Name ?? "尚未选择解析器"}"
+                        : "实时解析未启用";
+                }
+            }
+        }
+
+        private string _realtimeProtocolStatus = "实时解析未启用";
+        public string RealtimeProtocolStatus
+        {
+            get => _realtimeProtocolStatus;
+            set => SetProperty(ref _realtimeProtocolStatus, value);
+        }
 
         private string _filterKeyword = string.Empty;
 
@@ -744,8 +832,12 @@ namespace WpfProtocolStudio.ViewModels
         public ICommand ResetChannelBStatisticsCommand { get; }
         public ICommand FlushFramesCommand { get; }
         public ICommand CalculateChecksumCommand { get; }
+        public ICommand VerifyChecksumCommand { get; }
+        public ICommand ResetCrcValidationStatisticsCommand { get; }
         public ICommand ParseProtocolCommand { get; }
         public ICommand ReloadProtocolPluginsCommand { get; }
+        public ICommand OpenProtocolPluginFolderCommand { get; }
+        public ICommand ClearRealtimeProtocolResultsCommand { get; }
 
         private ICommunicationChannel _channelAObj;
         private ICommunicationChannel _channelBObj;
@@ -803,8 +895,12 @@ namespace WpfProtocolStudio.ViewModels
             ResetChannelBStatisticsCommand = new RelayCommand(ExecuteResetChannelBStatistics);
             FlushFramesCommand = new RelayCommand(() => _dataFramingService.FlushAll());
             CalculateChecksumCommand = new RelayCommand(ExecuteCalculateChecksum);
+            VerifyChecksumCommand = new RelayCommand(ExecuteVerifyChecksum);
+            ResetCrcValidationStatisticsCommand = new RelayCommand(ExecuteResetCrcValidationStatistics);
             ParseProtocolCommand = new RelayCommand(ExecuteParseProtocol);
             ReloadProtocolPluginsCommand = new RelayCommand(ReloadProtocolPlugins);
+            OpenProtocolPluginFolderCommand = new RelayCommand(ExecuteOpenProtocolPluginFolder);
+            ClearRealtimeProtocolResultsCommand = new RelayCommand(ExecuteClearRealtimeProtocolResults);
             OpenLogFolderCommand = new RelayCommand(() =>
             {
                 string logDir = string.IsNullOrEmpty(AutoSaveLogDirectory) ? System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs") : AutoSaveLogDirectory;
@@ -826,6 +922,7 @@ namespace WpfProtocolStudio.ViewModels
             _uiFlushTimer.Start();
 
             ReloadProtocolPlugins();
+            _protocolParseWorker = Task.Run(() => ProcessProtocolParseQueueAsync(_protocolParseCts.Token));
         }
 
         /// <summary>
@@ -1290,7 +1387,7 @@ namespace WpfProtocolStudio.ViewModels
             }else{
                 data = System.Text.Encoding.ASCII.GetBytes(SendText);
             }
-            
+
             ICommunicationChannel target = SendToA ? _channelAObj : _channelBObj;
             string targetName = SendToA ? "A" : "B";
             if (target == null || target.Status != ChannelStatus.Connected)
@@ -1442,7 +1539,7 @@ namespace WpfProtocolStudio.ViewModels
         }
 
         private void OnFileReceiveProgress(object sender, FileTransferEventArgs e)
-        {
+        { 
             RunOnUiThread(() =>
             {
                 double percentage = e.TotalBytes == 0 ? 100 : e.ReceivedBytes * 100.0 / e.TotalBytes;
@@ -1924,12 +2021,45 @@ namespace WpfProtocolStudio.ViewModels
             try
             {
                 string value = ChecksumService.Calculate(SelectedChecksumAlgorithm, data);
-                ChecksumResult = $"{value}  （{data.Length} 字节）";
+                byte[] appendBytes = ChecksumService.GetChecksumBytes(SelectedChecksumAlgorithm, data);
+                ChecksumResult = $"{value}  （{data.Length} 字节）｜追加字节：{ChecksumService.FormatBytes(appendBytes)}";
             }
             catch (Exception ex)
             {
                 ChecksumResult = "计算失败：" + ex.Message;
             }
+        }
+
+        private void ExecuteVerifyChecksum()
+        {
+            if (!IsChecksumInputHex)
+            {
+                ChecksumResult = "末尾校验只支持 HEX 输入；请输入包含末尾校验字节的完整报文。";
+                return;
+            }
+            if (!TryConvertToolInput(ChecksumInput, true, out byte[] completeFrame, out string errorMessage))
+            {
+                ChecksumResult = "输入错误：" + errorMessage;
+                return;
+            }
+
+            bool passed = ChecksumService.VerifyAppendedChecksum(
+                SelectedChecksumAlgorithm,
+                completeFrame,
+                out byte[] expected,
+                out byte[] actual);
+            ChecksumResult = passed
+                ? $"校验通过｜报文末尾：{ChecksumService.FormatBytes(actual)}"
+                : $"校验失败｜期望：{ChecksumService.FormatBytes(expected)}｜实际：{ChecksumService.FormatBytes(actual)}";
+        }
+
+        private void ExecuteResetCrcValidationStatistics()
+        {
+            Interlocked.Exchange(ref _crcValidFrameCount, 0);
+            Interlocked.Exchange(ref _crcInvalidFrameCount, 0);
+            OnPropertyChanged(nameof(CrcValidFrameCount));
+            OnPropertyChanged(nameof(CrcInvalidFrameCount));
+            OnPropertyChanged(nameof(CrcValidationSummary));
         }
 
         private void ReloadProtocolPlugins()
@@ -1944,9 +2074,34 @@ namespace WpfProtocolStudio.ViewModels
                 string.Equals(parser.Name, selectedName, StringComparison.OrdinalIgnoreCase))
                 ?? ProtocolParsers.FirstOrDefault();
 
-            ProtocolPluginStatus = loadResult.Errors.Count == 0
-                ? $"已加载 {ProtocolParsers.Count} 个解析器；插件目录：{pluginDirectory}"
-                : $"已加载 {ProtocolParsers.Count} 个解析器；{loadResult.Errors.Count} 个插件失败：{string.Join("；", loadResult.Errors)}";
+            string scanTime = DateTime.Now.ToString("HH:mm:ss");
+            if (loadResult.Errors.Count > 0)
+            {
+                ProtocolPluginStatus = $"{scanTime} 扫描完成：{loadResult.ScannedDllCount} 个DLL，成功加载 " +
+                    $"{loadResult.LoadedExternalParserCount} 个外部解析器，失败 {loadResult.Errors.Count} 个：" +
+                    string.Join("；", loadResult.Errors);
+            }
+            else if (loadResult.ScannedDllCount == 0)
+            {
+                ProtocolPluginStatus = $"{scanTime} 扫描完成：未发现外部插件DLL；当前仅有内置“通用字节解析”。";
+            }
+            else if (loadResult.LoadedExternalParserCount == 0)
+            {
+                ProtocolPluginStatus = $"{scanTime} 扫描了 {loadResult.ScannedDllCount} 个DLL，但没有找到有效的IProtocolParser实现。";
+            }
+            else
+            {
+                ProtocolPluginStatus = $"{scanTime} 扫描完成：{loadResult.ScannedDllCount} 个DLL，成功加载 " +
+                    $"{loadResult.LoadedExternalParserCount} 个外部解析器；解析器总数 {ProtocolParsers.Count}。";
+            }
+        }
+
+        private void ExecuteOpenProtocolPluginFolder()
+        {
+            string pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+            Directory.CreateDirectory(pluginDirectory);
+            System.Diagnostics.Process.Start("explorer.exe", pluginDirectory);
+            ProtocolPluginStatus = $"插件目录：{pluginDirectory}；把插件DLL放入后点击“重新加载插件”。";
         }
 
         private void ExecuteParseProtocol()
@@ -2039,10 +2194,146 @@ namespace WpfProtocolStudio.ViewModels
         private void OnDisplayFrameReady(object sender, ForwardingDataEventArgs e)
         {
             if (IsDisplayPaused || _disposed) return;
+
+            bool isReceiveFrame = e.Direction == DataDirection.ChannelA_Rx ||
+                                  e.Direction == DataDirection.ChannelB_Rx;
+            if (IsAutoReceiveChecksumEnabled && isReceiveFrame)
+            {
+                bool valid = ChecksumService.VerifyAppendedChecksum(
+                    SelectedReceiveChecksumAlgorithm,
+                    e.Data,
+                    IsReceiveChecksumHighByteFirst,
+                    out _,
+                    out _);
+                e.IsChecksumValid = valid;
+
+                int checksumLength = SelectedReceiveChecksumAlgorithm == ChecksumAlgorithm.Crc32 ? 4 : 2;
+                if (valid)
+                {
+                    int payloadLength = e.Data.Length - checksumLength;
+                    e.VerifiedPayload = new byte[payloadLength];
+                    Buffer.BlockCopy(e.Data, 0, e.VerifiedPayload, 0, payloadLength);
+                    Interlocked.Increment(ref _crcValidFrameCount);
+                }
+                else
+                {
+                    Interlocked.Increment(ref _crcInvalidFrameCount);
+                }
+
+                RunOnUiThread(() =>
+                {
+                    OnPropertyChanged(nameof(CrcValidFrameCount));
+                    OnPropertyChanged(nameof(CrcInvalidFrameCount));
+                    OnPropertyChanged(nameof(CrcValidationSummary));
+                });
+
+                if (!valid && HideInvalidChecksumFrames) return;
+            }
+
             _pendingUiRecords.Enqueue(e);
             int pendingCount = Interlocked.Increment(ref _pendingUiRecordCount);
             while (pendingCount > MaxPendingUiRecords && _pendingUiRecords.TryDequeue(out _))
                 pendingCount = Interlocked.Decrement(ref _pendingUiRecordCount);
+
+            if (!e.IsChecksumValid.HasValue || e.IsChecksumValid.Value)
+                EnqueueRealtimeProtocolParse(e);
+        }
+
+        private void EnqueueRealtimeProtocolParse(ForwardingDataEventArgs frame)
+        {
+            IProtocolParser parser = SelectedProtocolParser;
+            if (!IsRealtimeProtocolParsingEnabled || parser == null || frame?.Data == null) return;
+
+            while (Volatile.Read(ref _protocolParseQueueCount) >= MaxPendingProtocolParses &&
+                   _protocolParseQueue.TryDequeue(out _))
+            {
+                Interlocked.Decrement(ref _protocolParseQueueCount);
+            }
+
+            _protocolParseQueue.Enqueue(new ProtocolParseWorkItem
+            {
+                Timestamp = frame.Timestamp,
+                Direction = frame.Direction,
+                Data = (byte[])(frame.VerifiedPayload ?? frame.Data).Clone(),
+                Parser = parser
+            });
+            Interlocked.Increment(ref _protocolParseQueueCount);
+            _protocolParseSignal.Release();
+        }
+
+        private async Task ProcessProtocolParseQueueAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    await _protocolParseSignal.WaitAsync(cancellationToken);
+                    while (_protocolParseQueue.TryDequeue(out ProtocolParseWorkItem item))
+                    {
+                        Interlocked.Decrement(ref _protocolParseQueueCount);
+                        if (cancellationToken.IsCancellationRequested) return;
+                        if (!IsRealtimeProtocolParsingEnabled) continue;
+
+                        ProtocolDecodedRecord decoded = null;
+                        try
+                        {
+                            if (!item.Parser.CanParse(item.Data)) continue;
+                            ProtocolParseResult result = item.Parser.Parse(item.Data);
+                            if (result == null) throw new InvalidOperationException("解析器未返回结果");
+                            string fields = result.Fields == null
+                                ? string.Empty
+                                : string.Join(" | ", result.Fields.Select(field => $"{field.Key}: {field.Value}"));
+                            decoded = new ProtocolDecodedRecord
+                            {
+                                Timestamp = item.Timestamp,
+                                Direction = item.Direction,
+                                ParserName = item.Parser.Name,
+                                Success = result.Success,
+                                Summary = result.Summary,
+                                FieldsText = fields,
+                                RawHex = ChecksumService.FormatBytes(item.Data)
+                            };
+                        }
+                        catch (Exception ex)
+                        {
+                            decoded = new ProtocolDecodedRecord
+                            {
+                                Timestamp = item.Timestamp,
+                                Direction = item.Direction,
+                                ParserName = item.Parser.Name,
+                                Success = false,
+                                Summary = "解析异常：" + ex.Message,
+                                FieldsText = string.Empty,
+                                RawHex = ChecksumService.FormatBytes(item.Data)
+                            };
+                        }
+
+                        ProtocolDecodedRecord record = decoded;
+                        RunOnUiThread(() =>
+                        {
+                            if (_disposed) return;
+                            if (RealtimeProtocolResults.Count >= MaxRealtimeProtocolResults)
+                                RealtimeProtocolResults.RemoveRangeFromStart(
+                                    RealtimeProtocolResults.Count - MaxRealtimeProtocolResults + 1);
+                            RealtimeProtocolResults.Add(record);
+                            RealtimeProtocolStatus = $"实时解析运行中：{record.ParserName}，已显示 {RealtimeProtocolResults.Count} 条";
+                        });
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private void ExecuteClearRealtimeProtocolResults()
+        {
+            while (_protocolParseQueue.TryDequeue(out _))
+                Interlocked.Decrement(ref _protocolParseQueueCount);
+            RealtimeProtocolResults.Clear();
+            RealtimeProtocolStatus = IsRealtimeProtocolParsingEnabled
+                ? $"实时解析已启用：{SelectedProtocolParser?.Name ?? "尚未选择解析器"}"
+                : "实时解析未启用";
         }
         /// <summary>
         /// 处理数据转发事件
@@ -2183,6 +2474,7 @@ namespace WpfProtocolStudio.ViewModels
                     Direction = e.Direction,
                     RawData = e.Data,
                     Description = e.Description,
+                    IsChecksumValid = e.IsChecksumValid,
                     Format = SelectDisplayFormat
                 };
 
@@ -2215,6 +2507,8 @@ namespace WpfProtocolStudio.ViewModels
         private const int MaxPendingUiRecords = 50000;
         private const int MaxUiBatchSize = 1000;
         private const int MaxHistorySearchResults = 20000;
+        private const int MaxPendingProtocolParses = 2000;
+        private const int MaxRealtimeProtocolResults = 2000;
         /// <summary>
         /// 环形缓冲区推送方法：超过上限时自动移除最老数据 (FR-15)
         /// </summary>
@@ -2235,6 +2529,9 @@ namespace WpfProtocolStudio.ViewModels
             _uiFlushTimer?.Stop();
             _historySearchCts?.Cancel();
             _fileSendCts?.Cancel();
+            _protocolParseCts.Cancel();
+            _protocolParseSignal.Release();
+            try { _protocolParseWorker?.Wait(1000); } catch (AggregateException) { }
             StopAutoSendTimer();
             _fileReceiver.FileStarted -= OnFileReceiveStarted;
             _fileReceiver.FileProgress -= OnFileReceiveProgress;
@@ -2267,6 +2564,8 @@ namespace WpfProtocolStudio.ViewModels
             }
 
             LogService.Dispose();
+            _protocolParseSignal.Dispose();
+            _protocolParseCts.Dispose();
         }
     }
 }

@@ -13,6 +13,8 @@ namespace WpfProtocolStudio.Services
     {
         public IList<IProtocolParser> Parsers { get; } = new List<IProtocolParser>();
         public IList<string> Errors { get; } = new List<string>();
+        public int ScannedDllCount { get; internal set; }
+        public int LoadedExternalParserCount { get; internal set; }
     }
 
     /// <summary>
@@ -30,9 +32,11 @@ namespace WpfProtocolStudio.Services
                 Directory.CreateDirectory(pluginDirectory);
                 foreach (string filePath in Directory.GetFiles(pluginDirectory, "*.dll"))
                 {
+                    result.ScannedDllCount++;
                     try
                     {
-                        Assembly assembly = Assembly.LoadFrom(filePath);
+                        // 从字节加载，避免锁住Plugins目录中的原始DLL；运行中可覆盖同名插件后重新加载。
+                        Assembly assembly = Assembly.Load(File.ReadAllBytes(filePath));
                         foreach (Type type in GetLoadableTypes(assembly))
                         {
                             if (type == null || type.IsAbstract || type.IsInterface ||
@@ -44,6 +48,7 @@ namespace WpfProtocolStudio.Services
                                 !string.Equals(existing.Name, parser.Name, StringComparison.OrdinalIgnoreCase)))
                             {
                                 result.Parsers.Add(parser);
+                                result.LoadedExternalParserCount++;
                             }
                         }
                     }

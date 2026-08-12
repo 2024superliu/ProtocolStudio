@@ -74,6 +74,7 @@
     <Compile Include="Models\HistoryDataRecord.cs" />
     <Compile Include="Models\MessageTemplate.cs" />
     <Compile Include="Models\ProtocolParseResult.cs" />
+    <Compile Include="Models\ProtocolDecodedRecord.cs" />
     <Compile Include="Services\ConfigManager.cs" />
     <Compile Include="Services\FileTransferService.cs" />
     <Compile Include="Services\HistoryLogSearchService.cs" />
