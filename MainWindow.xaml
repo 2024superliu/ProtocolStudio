@@ -6,7 +6,7 @@
         xmlns:viewModels="clr-namespace:WpfProtocolStudio.ViewModels"
         xmlns:helpers="clr-namespace:WpfProtocolStudio.Helpers"
         mc:Ignorable="d"
-        Title="通信与协议双通道中继调试 v1.0"
+        Title="通信与协议双通道中继调试 v2.0"
         Width="1320" Height="800" MinWidth="1000" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Background="#F3F6FA" Foreground="#263244"
@@ -804,28 +804,26 @@
                                               ItemTemplate="{StaticResource LocalizedEnumItemTemplate}" Width="175" Margin="0,0,14,0"/>
 
                                     <TextBlock Text="固定长度" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
-                                    <TextBox Text="{Binding FrameFixedLength, UpdateSourceTrigger=PropertyChanged}" Width="75" Margin="0,0,4,0"/>
+                                    <TextBox Text="{Binding FrameFixedLength}" Width="75" Margin="0,0,4,0"/>
                                     <TextBlock Text="字节" Margin="0,0,14,0"/>
 
                                     <TextBlock Text="分隔符" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
-                                    <TextBox Text="{Binding FrameDelimiterText, UpdateSourceTrigger=PropertyChanged}" Width="145" Margin="0,0,6,0"
+                                    <TextBox Text="{Binding FrameDelimiterText}" Width="145" Margin="0,0,6,0"
                                              FontFamily="Consolas" ToolTip="HEX示例：0D 0A；文本模式可输入任意UTF-8文本"/>
                                     <RadioButton Content="HEX" IsChecked="{Binding IsFrameDelimiterHex}" Margin="0,0,7,0"/>
                                     <RadioButton Content="文本" IsChecked="{Binding IsFrameDelimiterText}" Margin="0,0,14,0"/>
 
                                     <TextBlock Text="空闲间隔" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
-                                    <TextBox Text="{Binding FrameIdleMilliseconds, UpdateSourceTrigger=PropertyChanged}" Width="75" Margin="0,0,4,0"/>
+                                    <TextBox Text="{Binding FrameIdleMilliseconds}" Width="75" Margin="0,0,4,0"/>
                                     <TextBlock Text="ms" Margin="0,0,14,0"/>
 
-                                    <Button Content="应用分帧" Command="{Binding ApplyFramingCommand}"
-                                            Style="{StaticResource PrimaryButton}" MinHeight="28" Padding="12,4" Margin="0,0,6,0"/>
                                     <Button Content="输出剩余数据" Command="{Binding FlushFramesCommand}"
                                             MinHeight="28" Padding="10,4"/>
                                 </WrapPanel>
                                 <Border Background="#F4F7FB" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,7">
                                     <StackPanel>
                                         <TextBlock Text="{Binding FrameConfigurationStatus}" Foreground="#334155" FontWeight="SemiBold"/>
-                                        <TextBlock Text="分帧仅影响实时显示；原始转发、日志和接收文件不被修改。固定长度的尾部不足数据可点击“输出剩余数据”。"
+                                        <TextBlock Text="分帧结果显示在实时数据页对应区域。分隔符不存在或固定长度不足时，缓存会在达到空闲间隔后自动输出，也可点击“输出剩余数据”立即输出。注意：文本 01 是字节 30 31；匹配单字节 01 请选 HEX。"
                                                    Foreground="{StaticResource MutedTextBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>

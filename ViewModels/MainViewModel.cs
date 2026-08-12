@@ -300,11 +300,35 @@ namespace WpfProtocolStudio.ViewModels
         // FR-27 显示分帧配置。四个数据方向共用配置，但各自独立缓存。
         public Array FrameModes => Enum.GetValues(typeof(FrameMode));
         private FrameMode _selectedFrameMode = FrameMode.None;
-        public FrameMode SelectedFrameMode { get => _selectedFrameMode; set => SetProperty(ref _selectedFrameMode, value); }
+        public FrameMode SelectedFrameMode
+        {
+            get => _selectedFrameMode;
+            set
+            {
+                if (SetProperty(ref _selectedFrameMode, value))
+                    ApplyFramingConfiguration();
+            }
+        }
         private int _frameFixedLength = 8;
-        public int FrameFixedLength { get => _frameFixedLength; set => SetProperty(ref _frameFixedLength, value); }
+        public int FrameFixedLength
+        {
+            get => _frameFixedLength;
+            set
+            {
+                if (SetProperty(ref _frameFixedLength, value) && SelectedFrameMode == FrameMode.FixedLength)
+                    ApplyFramingConfiguration();
+            }
+        }
         private string _frameDelimiterText = "0D 0A";
-        public string FrameDelimiterText { get => _frameDelimiterText; set => SetProperty(ref _frameDelimiterText, value); }
+        public string FrameDelimiterText
+        {
+            get => _frameDelimiterText;
+            set
+            {
+                if (SetProperty(ref _frameDelimiterText, value) && SelectedFrameMode == FrameMode.Delimiter)
+                    ApplyFramingConfiguration();
+            }
+        }
         private bool _isFrameDelimiterHex = true;
         public bool IsFrameDelimiterHex
         {
@@ -312,12 +336,24 @@ namespace WpfProtocolStudio.ViewModels
             set
             {
                 if (SetProperty(ref _isFrameDelimiterHex, value))
+                {
                     OnPropertyChanged(nameof(IsFrameDelimiterText));
+                    if (SelectedFrameMode == FrameMode.Delimiter)
+                        ApplyFramingConfiguration();
+                }
             }
         }
         public bool IsFrameDelimiterText { get => !IsFrameDelimiterHex; set => IsFrameDelimiterHex = !value; }
         private int _frameIdleMilliseconds = 50;
-        public int FrameIdleMilliseconds { get => _frameIdleMilliseconds; set => SetProperty(ref _frameIdleMilliseconds, value); }
+        public int FrameIdleMilliseconds
+        {
+            get => _frameIdleMilliseconds;
+            set
+            {
+                if (SetProperty(ref _frameIdleMilliseconds, value) && SelectedFrameMode != FrameMode.None)
+                    ApplyFramingConfiguration();
+            }
+        }
         private string _frameConfigurationStatus = "当前按底层接收块显示，尚未启用重新分帧";
         public string FrameConfigurationStatus { get => _frameConfigurationStatus; set => SetProperty(ref _frameConfigurationStatus, value); }
 
@@ -706,7 +742,6 @@ namespace WpfProtocolStudio.ViewModels
         public ICommand SelectReceivedFilesDirectoryCommand { get; }
         public ICommand ResetChannelAStatisticsCommand { get; }
         public ICommand ResetChannelBStatisticsCommand { get; }
-        public ICommand ApplyFramingCommand { get; }
         public ICommand FlushFramesCommand { get; }
         public ICommand CalculateChecksumCommand { get; }
         public ICommand ParseProtocolCommand { get; }
@@ -766,7 +801,6 @@ namespace WpfProtocolStudio.ViewModels
             SelectReceivedFilesDirectoryCommand = new RelayCommand(ExecuteSelectReceivedFilesDirectory);
             ResetChannelAStatisticsCommand = new RelayCommand(ExecuteResetChannelAStatistics);
             ResetChannelBStatisticsCommand = new RelayCommand(ExecuteResetChannelBStatistics);
-            ApplyFramingCommand = new RelayCommand(ExecuteApplyFraming);
             FlushFramesCommand = new RelayCommand(() => _dataFramingService.FlushAll());
             CalculateChecksumCommand = new RelayCommand(ExecuteCalculateChecksum);
             ParseProtocolCommand = new RelayCommand(ExecuteParseProtocol);
@@ -1828,39 +1862,47 @@ namespace WpfProtocolStudio.ViewModels
             }
         }
 
-        private void ExecuteApplyFraming()
+        private void ApplyFramingConfiguration()
         {
-            if (FrameFixedLength < 1 || FrameFixedLength > 1024 * 1024)
+            if (SelectedFrameMode == FrameMode.FixedLength &&
+                (FrameFixedLength < 1 || FrameFixedLength > 1024 * 1024))
             {
                 MessageBox.Show("固定帧长必须在 1～1,048,576 字节之间。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            if (FrameIdleMilliseconds < 1 || FrameIdleMilliseconds > 60000)
+            if (SelectedFrameMode != FrameMode.None &&
+                (FrameIdleMilliseconds < 1 || FrameIdleMilliseconds > 60000))
             {
                 MessageBox.Show("时间间隔必须在 1～60,000 毫秒之间。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            byte[] delimiter;
-            if (!TryConvertToolInput(FrameDelimiterText, IsFrameDelimiterHex, out delimiter, out string errorMessage))
+            byte[] delimiter = new byte[0];
+            if (SelectedFrameMode == FrameMode.Delimiter)
             {
-                MessageBox.Show($"分隔符无效：{errorMessage}", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            if (delimiter.Length > 256)
-            {
-                MessageBox.Show("分隔符不能超过 256 字节。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                if (!TryConvertToolInput(FrameDelimiterText, IsFrameDelimiterHex, out delimiter, out string errorMessage))
+                {
+                    MessageBox.Show($"分隔符无效：{errorMessage}", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                if (delimiter.Length > 256)
+                {
+                    MessageBox.Show("分隔符不能超过 256 字节。", "分帧参数错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
             }
 
             _dataFramingService.Configure(SelectedFrameMode, FrameFixedLength, delimiter, FrameIdleMilliseconds);
             switch (SelectedFrameMode)
             {
                 case FrameMode.FixedLength:
-                    FrameConfigurationStatus = $"已启用固定长度分帧：每帧 {FrameFixedLength} 字节";
+                    FrameConfigurationStatus = $"已启用固定长度分帧：每帧 {FrameFixedLength} 字节；不足一帧时空闲 {FrameIdleMilliseconds} ms 自动输出";
                     break;
                 case FrameMode.Delimiter:
-                    FrameConfigurationStatus = $"已启用分隔符分帧：{BitConverter.ToString(delimiter).Replace("-", " ")}（分隔符包含在帧尾）";
+                    string delimiterBytes = BitConverter.ToString(delimiter).Replace("-", " ");
+                    FrameConfigurationStatus = IsFrameDelimiterHex
+                        ? $"已启用HEX分隔符分帧：{delimiterBytes}；未匹配时空闲 {FrameIdleMilliseconds} ms 自动输出"
+                        : $"已启用文本分隔符分帧：“{FrameDelimiterText}” = {delimiterBytes}；未匹配时空闲 {FrameIdleMilliseconds} ms 自动输出";
                     break;
                 case FrameMode.TimeInterval:
                     FrameConfigurationStatus = $"已启用时间分帧：连续空闲 {FrameIdleMilliseconds} ms 后输出一帧";
@@ -2034,7 +2076,7 @@ namespace WpfProtocolStudio.ViewModels
                 //1、将记录送至后台队列
                 LogService.Enqueue(e);
             }
-            // 2、仅显示链路进行FR-27分帧；转发、日志和原始文件仍使用原始数据块。
+            // 2、分帧后的显示记录进入原有 A-RX/A-TX/B-RX/B-TX 区域。
             if (IsDisplayPaused) return;
             _dataFramingService.Process(e);
         }
@@ -2166,6 +2208,7 @@ namespace WpfProtocolStudio.ViewModels
             AddBatchToRingBuffer(ChannelATxRecords, aTx);
             AddBatchToRingBuffer(ChannelBRxRecords, bRx);
             AddBatchToRingBuffer(ChannelBTxRecords, bTx);
+
         }
 
         private const int MaxBufferCapacity = 10000;

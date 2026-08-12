@@ -93,25 +93,23 @@ namespace WpfProtocolStudio.Services
                         break;
 
                     case FrameMode.TimeInterval:
-                        if (state.IdleTimer == null)
-                        {
-                            state.IdleTimer = new Timer(
-                                _ => FlushDirection(record.Direction),
-                                null,
-                                idleMilliseconds,
-                                Timeout.Infinite);
-                        }
-                        else
-                        {
-                            state.IdleTimer.Change(idleMilliseconds, Timeout.Infinite);
-                        }
                         break;
                 }
 
                 if (state.Buffer.Count >= MaximumBufferedBytes)
                     frames.Add(TakeFromStart(state.Buffer, state.Buffer.Count));
 
-                if (state.Buffer.Count == 0) state.Description = string.Empty;
+                if (state.Buffer.Count > 0)
+                {
+                    // 固定长度或分隔符未形成完整帧时，以空闲间隔兜底输出，避免数据无限隐藏。
+                    ScheduleIdleFlush(state, record.Direction, idleMilliseconds);
+                }
+                else
+                {
+                    state.IdleTimer?.Dispose();
+                    state.IdleTimer = null;
+                    state.Description = string.Empty;
+                }
             }
 
             foreach (byte[] frame in frames)
@@ -163,6 +161,22 @@ namespace WpfProtocolStudio.Services
         private void RaiseFrame(DataDirection direction, byte[] data, string description)
         {
             FrameReady?.Invoke(this, new ForwardingDataEventArgs(direction, data, description));
+        }
+
+        private void ScheduleIdleFlush(DirectionState state, DataDirection direction, int idleMilliseconds)
+        {
+            if (state.IdleTimer == null)
+            {
+                state.IdleTimer = new Timer(
+                    _ => FlushDirection(direction),
+                    null,
+                    idleMilliseconds,
+                    Timeout.Infinite);
+            }
+            else
+            {
+                state.IdleTimer.Change(idleMilliseconds, Timeout.Infinite);
+            }
         }
 
         private static byte[] TakeFromStart(List<byte> buffer, int count)
