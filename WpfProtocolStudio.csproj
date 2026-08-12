@@ -66,22 +66,16 @@
     <Compile Include="Channels\UdpChannel.cs" />
     <Compile Include="Enums\DisconnectStrategy.cs" />
     <Compile Include="Enums\DisplayFormat.cs" />
-    <Compile Include="Enums\FrameMode.cs" />
-    <Compile Include="Enums\ChecksumAlgorithm.cs" />
     <Compile Include="Enums\LogFileFormat.cs" />
     <Compile Include="Models\ChannelConfigProfile.cs" />
     <Compile Include="Models\DataRecord.cs" />
     <Compile Include="Models\HistoryDataRecord.cs" />
     <Compile Include="Models\MessageTemplate.cs" />
-    <Compile Include="Models\ProtocolParseResult.cs" />
     <Compile Include="Services\ConfigManager.cs" />
     <Compile Include="Services\FileTransferService.cs" />
     <Compile Include="Services\HistoryLogSearchService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\MessageTemplateManager.cs" />
-    <Compile Include="Services\DataFramingService.cs" />
-    <Compile Include="Services\ChecksumService.cs" />
-    <Compile Include="Services\ProtocolPluginService.cs" />
     
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -111,7 +105,6 @@
     <Compile Include="Helpers\RangeObservableCollection.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Interfaces\ICommunicationChannel.cs" />
-    <Compile Include="Interfaces\IProtocolParser.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -142,9 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Plugins\README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ProtocolStudio.ico" />

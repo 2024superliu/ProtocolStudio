@@ -61,27 +61,6 @@ namespace WpfProtocolStudio.Helpers
                 }
             }
 
-            if (value is FrameMode frameMode)
-            {
-                switch (frameMode)
-                {
-                    case FrameMode.None: return "按接收块（不重分帧）";
-                    case FrameMode.FixedLength: return "固定长度";
-                    case FrameMode.Delimiter: return "分隔符";
-                    case FrameMode.TimeInterval: return "时间间隔";
-                }
-            }
-
-            if (value is ChecksumAlgorithm checksumAlgorithm)
-            {
-                switch (checksumAlgorithm)
-                {
-                    case ChecksumAlgorithm.Crc16Modbus: return "CRC16 / MODBUS";
-                    case ChecksumAlgorithm.Crc16CcittFalse: return "CRC16 / CCITT-FALSE";
-                    case ChecksumAlgorithm.Crc32: return "CRC32 / ISO-HDLC";
-                }
-            }
-
             if (value is DisconnectStrategy strategy)
             {
                 switch (strategy)

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace WpfProtocolStudio.ViewModels
 {
+    /// <summary>
+    /// 实现数据的“双向绑定”
+    /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
