@@ -1,0 +1,262 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\VSDemo\\WpfProtocolStudio\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|d:\\vsdemo\\wpfprotocolstudio\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\channels\\tcpclientchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:channels\\tcpclientchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\channels\\canchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:channels\\canchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\helpers\\autoscrollhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:helpers\\autoscrollhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\enums\\logfileformat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:enums\\logfileformat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\services\\logservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:services\\logservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\services\\filetransferservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:services\\filetransferservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\services\\historylogsearchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:services\\historylogsearchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\services\\messagetemplatemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:services\\messagetemplatemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\models\\channelconfigprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:models\\channelconfigprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|WpfProtocolStudio||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\enums\\channeltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:enums\\channeltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|D:\\VSDemo\\WpfProtocolStudio\\helpers\\enumdisplayconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}|WpfProtocolStudio.csproj|solutionrelative:helpers\\enumdisplayconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CanChannel.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Channels\\CanChannel.cs",
+              "RelativeDocumentMoniker": "Channels\\CanChannel.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Channels\\CanChannel.cs",
+              "RelativeToolTip": "Channels\\CanChannel.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAuwBsAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T09:43:29.388Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AutoScrollHelper.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Helpers\\AutoScrollHelper.cs",
+              "RelativeDocumentMoniker": "Helpers\\AutoScrollHelper.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Helpers\\AutoScrollHelper.cs",
+              "RelativeToolTip": "Helpers\\AutoScrollHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T09:41:24.467Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-08-10T03:23:53.312Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LogService.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Services\\LogService.cs",
+              "RelativeDocumentMoniker": "Services\\LogService.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Services\\LogService.cs",
+              "RelativeToolTip": "Services\\LogService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T03:48:40.475Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TcpClientChannel.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Channels\\TcpClientChannel.cs",
+              "RelativeDocumentMoniker": "Channels\\TcpClientChannel.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Channels\\TcpClientChannel.cs",
+              "RelativeToolTip": "Channels\\TcpClientChannel.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAjwGcAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T03:15:28.817Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HistoryLogSearchService.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Services\\HistoryLogSearchService.cs",
+              "RelativeDocumentMoniker": "Services\\HistoryLogSearchService.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Services\\HistoryLogSearchService.cs",
+              "RelativeToolTip": "Services\\HistoryLogSearchService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T03:48:42.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LogFileFormat.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Enums\\LogFileFormat.cs",
+              "RelativeDocumentMoniker": "Enums\\LogFileFormat.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Enums\\LogFileFormat.cs",
+              "RelativeToolTip": "Enums\\LogFileFormat.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T05:58:34.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FileTransferService.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Services\\FileTransferService.cs",
+              "RelativeDocumentMoniker": "Services\\FileTransferService.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Services\\FileTransferService.cs",
+              "RelativeToolTip": "Services\\FileTransferService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T03:48:17.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MessageTemplateManager.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Services\\MessageTemplateManager.cs",
+              "RelativeDocumentMoniker": "Services\\MessageTemplateManager.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Services\\MessageTemplateManager.cs",
+              "RelativeToolTip": "Services\\MessageTemplateManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-11T03:48:37.004Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\ViewModels\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\MainViewModel.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\ViewModels\\MainViewModel.cs",
+              "RelativeToolTip": "ViewModels\\MainViewModel.cs",
+              "ViewState": "AgIAAOkFAAAAAAAAAAASwPcFAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T02:49:28.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\ViewModels\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "ViewModels\\ViewModelBase.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\ViewModels\\ViewModelBase.cs",
+              "RelativeToolTip": "ViewModels\\ViewModelBase.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T02:47:40.048Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ChannelConfigProfile.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Models\\ChannelConfigProfile.cs",
+              "RelativeDocumentMoniker": "Models\\ChannelConfigProfile.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Models\\ChannelConfigProfile.cs",
+              "RelativeToolTip": "Models\\ChannelConfigProfile.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAAABQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T02:49:15.987Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "WpfProtocolStudio",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\WpfProtocolStudio.csproj",
+              "RelativeDocumentMoniker": "WpfProtocolStudio.csproj",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\WpfProtocolStudio.csproj",
+              "RelativeToolTip": "WpfProtocolStudio.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-10T06:49:04.331Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ChannelType.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Enums\\ChannelType.cs",
+              "RelativeDocumentMoniker": "Enums\\ChannelType.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Enums\\ChannelType.cs",
+              "RelativeToolTip": "Enums\\ChannelType.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAIwBQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T02:46:11.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "EnumDisplayConverter.cs",
+              "DocumentMoniker": "D:\\VSDemo\\WpfProtocolStudio\\Helpers\\EnumDisplayConverter.cs",
+              "RelativeDocumentMoniker": "Helpers\\EnumDisplayConverter.cs",
+              "ToolTip": "D:\\VSDemo\\WpfProtocolStudio\\Helpers\\EnumDisplayConverter.cs",
+              "RelativeToolTip": "Helpers\\EnumDisplayConverter.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAowCQAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-10T02:48:48.972Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
