@@ -1,0 +1,17 @@
+D:\VSDemo\WpfProtocolStudio\bin\Release\WpfProtocolStudio.exe.config
+D:\VSDemo\WpfProtocolStudio\bin\Release\WpfProtocolStudio.exe
+D:\VSDemo\WpfProtocolStudio\bin\Release\WpfProtocolStudio.pdb
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.csproj.AssemblyReference.cache
+D:\VSDemo\WpfProtocolStudio\obj\Release\MainWindow.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Release\App.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Release\GeneratedInternalTypeHelper.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio_MarkupCompile.cache
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio_MarkupCompile.lref
+D:\VSDemo\WpfProtocolStudio\obj\Release\MainWindow.baml
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.g.resources
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.Properties.Resources.resources
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.csproj.GenerateResource.cache
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.csproj.CoreCompileInputs.cache
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.exe
+D:\VSDemo\WpfProtocolStudio\obj\Release\WpfProtocolStudio.pdb
+D:\VSDemo\WpfProtocolStudio\bin\Release\Plugins\README.md

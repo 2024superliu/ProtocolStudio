@@ -1,0 +1,15 @@
+﻿[13:50:26.8004][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:26.9749][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:27.1773][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:27.4184][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:27.6267][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:27.7901][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:27.9723][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:28.1506][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:28.3248][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:28.5208][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:28.6760][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:28.8795][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:29.0747][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:29.2620][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端
+[13:50:29.4109][ChannelA_Tx]Len:[20] HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCII:Welcome to NetAssist | 转发自 B 端

@@ -1,0 +1,16 @@
+D:\VSDemo\WpfProtocolStudio\artifacts\Verify\WpfProtocolStudio.exe.config
+D:\VSDemo\WpfProtocolStudio\artifacts\Verify\WpfProtocolStudio.exe
+D:\VSDemo\WpfProtocolStudio\artifacts\Verify\WpfProtocolStudio.pdb
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.csproj.AssemblyReference.cache
+D:\VSDemo\WpfProtocolStudio\obj\Verify\MainWindow.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Verify\App.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Verify\GeneratedInternalTypeHelper.g.cs
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio_MarkupCompile.cache
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio_MarkupCompile.lref
+D:\VSDemo\WpfProtocolStudio\obj\Verify\MainWindow.baml
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.g.resources
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.Properties.Resources.resources
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.csproj.GenerateResource.cache
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.csproj.CoreCompileInputs.cache
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.exe
+D:\VSDemo\WpfProtocolStudio\obj\Verify\WpfProtocolStudio.pdb
