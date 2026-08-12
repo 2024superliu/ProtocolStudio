@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WpfProtocolStudio.ViewModels
 {
     /// <summary>
-    ///  View 和 ViewModel 双向绑定 
+    ///  View 和 ViewModel 双向绑
     /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
