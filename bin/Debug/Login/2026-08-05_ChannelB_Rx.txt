@@ -1,0 +1,96 @@
+﻿[10:48:01.0305][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:01.4231][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:01.8722][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:02.5007][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:14.0928][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:14.8056][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:14.9897][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:15.1950][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:15.9602][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[10:48:16.1377][ChannelB_Rx]Len:[20]HEX:57 65 6C 63 6F 6D 65 20 74 6F 20 4E 65 74 41 73 73 69 73 74 | ASCIIWelcome to NetAssist
+[11:37:48.2747][ChannelB_Rx]Len:[4]HEX:32 32 32 32 | ASCII2222
+[14:27:26.2685][ChannelB_Rx]Len:[8]HEX:11 11 11 11 11 11 11 11 | ASCII
+[14:27:27.2077][ChannelB_Rx]Len:[8]HEX:11 11 11 11 11 11 11 11 | ASCII
+[14:27:27.6804][ChannelB_Rx]Len:[8]HEX:11 11 11 11 11 11 11 11 | ASCII
+[14:27:27.8815][ChannelB_Rx]Len:[8]HEX:11 11 11 11 11 11 11 11 | ASCII
+[14:27:28.0617][ChannelB_Rx]Len:[8]HEX:11 11 11 11 11 11 11 11 | ASCII
+[14:30:15.3328][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:15.5351][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:15.7205][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:15.9023][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:16.0770][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:16.2398][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:16.4222][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:16.6157][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:34.0914][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:34.5551][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:34.7649][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:34.9677][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:35.1554][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:35.3484][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:35.5448][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:35.7388][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:35.9114][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:36.1028][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:36.3037][ChannelB_Rx]Len:[2]HEX:22 22 | ASCII""
+[14:30:47.3975][ChannelB_Rx]Len:[4]HEX:EE EE EE EE | ASCII????
+[14:35:42.8100][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:43.0244][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:43.2180][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:54.7280][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:54.9216][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:55.1293][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:55.3258][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:55.5804][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:55.7757][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.0239][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.2191][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.4226][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.6375][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.8097][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:56.9994][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:57.1872][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:57.3793][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:57.5592][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:57.7472][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:57.9342][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:58.1230][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:58.5128][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:58.7433][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:58.9714][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:35:59.1938][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:00.6858][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:02.3072][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:02.5973][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:02.8319][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:03.0398][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:03.2654][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:03.7897][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:04.0140][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:04.2398][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:04.4888][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:05.2364][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:05.4404][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:05.6431][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:05.9506][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:08.2676][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:08.4672][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:08.6863][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:08.8974][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:09.1206][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:09.3253][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:36:09.5251][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:35.0639][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:36.0217][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:36.2242][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:36.6159][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:36.8014][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:38.9566][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:39.2007][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:39.6267][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:42:57.5909][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:43:04.1227][ChannelB_Rx]Len:[7]HEX:FF FF FF FF FF FF FF | ASCII???????
+[14:43:07.5079][ChannelB_Rx]Len:[7]HEX:20 20 20 20 20 20 20 | ASCII       
+[14:43:10.8371][ChannelB_Rx]Len:[7]HEX:20 20 20 20 20 20 20 | ASCII       
+[14:43:26.2673][ChannelB_Rx]Len:[7]HEX:20 20 20 20 20 20 20 | ASCII       
+[14:44:24.6246][ChannelB_Rx]Len:[7]HEX:20 20 20 20 20 20 20 | ASCII       
