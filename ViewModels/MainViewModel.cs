@@ -23,6 +23,9 @@ using System.IO; // 引入 Windows 文件对话框
 
 namespace WpfProtocolStudio.ViewModels
 {
+    /// <summary>
+    /// 主窗体视图模型
+    /// </summary>
     public class MainViewModel : ViewModelBase, IDisposable
     {
         public ForwardingEngine Engine { get; } = new ForwardingEngine();
