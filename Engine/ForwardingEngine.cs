@@ -223,7 +223,9 @@ namespace WpfProtocolStudio.Engine
                     break;
             }
         }
-
+        /// <summary>
+        /// 数据入队
+        /// </summary>
         private static void EnqueueBounded(ConcurrentQueue<byte[]> queue, byte[] data)
         {
             if (data == null || data.Length == 0) return;
