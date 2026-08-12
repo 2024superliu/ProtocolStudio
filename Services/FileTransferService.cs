@@ -10,6 +10,9 @@ using WpfProtocolStudio.Enums;
 
 namespace WpfProtocolStudio.Services
 {
+    /// <summary>
+    /// 文件协议传输细节
+    /// </summary>
     public static class FileTransferProtocol
     {
         internal static readonly byte[] Magic = Encoding.ASCII.GetBytes("WPSFILE1");
@@ -17,6 +20,12 @@ namespace WpfProtocolStudio.Services
         internal const int FixedHeaderLength = 8 + 2 + HashLength;
         internal const int MaximumFileNameBytes = 1024;
 
+        /// <summary>
+        /// 创建文件头
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <param name="fileLength">文件长度</param>
+        /// <param name="sha256">哈希值</param>
         public static byte[] CreateHeader(string fileName, long fileLength, byte[] sha256)
         {
             string safeName = Path.GetFileName(fileName ?? string.Empty);
@@ -41,6 +50,9 @@ namespace WpfProtocolStudio.Services
             }
         }
 
+        /// <summary>
+        /// 异步计算给定文件路径的哈希值
+        /// </summary>
         public static Task<byte[]> ComputeSha256Async(string filePath, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
@@ -62,16 +74,28 @@ namespace WpfProtocolStudio.Services
         }
     }
 
+    /// <summary>
+    /// 文件传输过程中传递事件信息
+    /// </summary>
     public sealed class FileTransferEventArgs : EventArgs
     {
+        // 数据流向 (A端接收 / B端接收) 
         public DataDirection Direction { get; set; }
+        // 文件名 
         public string FileName { get; set; }
+        // 本地落盘的目标全路径 
         public string SavedPath { get; set; }
+        // 文件总字节数 
         public long TotalBytes { get; set; }
+        // 已接收的字节数 
         public long ReceivedBytes { get; set; }
+        // 状态或错误提示消息 
         public string Message { get; set; }
     }
 
+    /// <summary>
+    /// 接收文件
+    /// </summary>
     public sealed class FileTransferReceiver : IDisposable
     {
         private enum ReceivePhase
@@ -102,34 +126,51 @@ namespace WpfProtocolStudio.Services
             public string PartPath;
         }
 
+        // 允许接收的最大文件上限 (单文件限制 100 GB) 
         private const long MaximumAcceptedFileLength = 100L * 1024 * 1024 * 1024;
+
+        // A 端与 B 端独立的接收状态上下文字典 
         private readonly Dictionary<DataDirection, ReceiveState> _states =
             new Dictionary<DataDirection, ReceiveState>
             {
                 { DataDirection.ChannelA_Rx, new ReceiveState() },
                 { DataDirection.ChannelB_Rx, new ReceiveState() }
             };
+
+        // 通道接收开启状态映射 
         private readonly Dictionary<DataDirection, bool> _enabledDirections =
             new Dictionary<DataDirection, bool>
             {
                 { DataDirection.ChannelA_Rx, false },
                 { DataDirection.ChannelB_Rx, false }
             };
+
+        // 通道自定义保存文件夹路径映射
         private readonly Dictionary<DataDirection, string> _outputDirectories =
             new Dictionary<DataDirection, string>
             {
                 { DataDirection.ChannelA_Rx, null },
                 { DataDirection.ChannelB_Rx, null }
             };
+
         private bool _disposed;
 
+        // 默认接收文件输出保存目录 (默认程序根路径/ReceivedFiles) 
         public string OutputDirectory { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ReceivedFiles");
 
+        // 文件开始接收事件
         public event EventHandler<FileTransferEventArgs> FileStarted;
+
+        // 文件接收进度更新事件
         public event EventHandler<FileTransferEventArgs> FileProgress;
+
+        // 文件接收并校验成功完成事件
         public event EventHandler<FileTransferEventArgs> FileCompleted;
+
+        // 文件接收或校验失败事件
         public event EventHandler<FileTransferEventArgs> FileFailed;
 
+        // 配置指定通道的数据保存使能开关与输出路径
         public void ConfigureDirection(DataDirection direction, bool enabled, string outputDirectory)
         {
             if (!_states.TryGetValue(direction, out ReceiveState state)) return;
@@ -386,18 +427,25 @@ namespace WpfProtocolStudio.Services
             public long ReceivedBytes;
         }
 
+        // 空闲判定超时时间
         private const int FileEndIdleMilliseconds = 2000;
+
         private readonly Dictionary<DataDirection, RawReceiveState> _states =
             new Dictionary<DataDirection, RawReceiveState>
             {
                 { DataDirection.ChannelA_Rx, new RawReceiveState() },
                 { DataDirection.ChannelB_Rx, new RawReceiveState() }
             };
+
         private bool _disposed;
 
+        // 裸流文件完成接收事件
         public event EventHandler<FileTransferEventArgs> FileCompleted;
+
+        // 裸流文件失败事件
         public event EventHandler<FileTransferEventArgs> FileFailed;
 
+        // 配置通道裸流保存配置
         public void ConfigureDirection(DataDirection direction, bool enabled, string outputDirectory)
         {
             if (!_states.TryGetValue(direction, out RawReceiveState state)) return;
@@ -446,12 +494,14 @@ namespace WpfProtocolStudio.Services
             }
         }
 
+        // 恢复裸流接收
         public void Resume(DataDirection direction)
         {
             if (!_states.TryGetValue(direction, out RawReceiveState state)) return;
             lock (state.SyncRoot) state.Suppressed = false;
         }
 
+        // 初始化裸数据写入文件流与空闲定时器
         private void BeginLocked(DataDirection direction, RawReceiveState state)
         {
             string directory = state.OutputDirectory;
@@ -592,6 +642,9 @@ namespace WpfProtocolStudio.Services
             return ".bin";
         }
 
+        /// <summary> 
+        /// 辅助方法：判断文件内部是否包含指定的 ASCII 关键字标记 
+        /// </summary>
         private static bool ContainsAscii(string path, string text)
         {
             byte[] pattern = Encoding.ASCII.GetBytes(text);
