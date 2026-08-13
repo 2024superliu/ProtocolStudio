@@ -183,13 +183,15 @@ namespace WpfProtocolStudio.ViewModels
             get => _saveARxFile;
             set
             {
+                // 保存
                 if (_saveARxFile == value) return;
+                // 选择文件夹
                 if (value && string.IsNullOrWhiteSpace(_rxFileDirectory) && !SelectRawReceiveDirectory())
                 {
                     OnPropertyChanged(nameof(SaveARxFile));
                     return;
                 }
-
+                // 如果已经设置就不需要在选择
                 if (SetProperty(ref _saveARxFile, value))
                 {
                     _fileReceiver.ConfigureDirection(DataDirection.ChannelA_Rx, value, _rxFileDirectory);
