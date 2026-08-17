@@ -990,7 +990,8 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,15,0"
+                            IsEnabled="{Binding IsNormalDataSendEnabled}">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <TextBlock Text="发送至" Foreground="{StaticResource MutedTextBrush}" FontWeight="SemiBold" Margin="0,0,9,0"/>
                         <RadioButton Content="A 端" IsChecked="{Binding SendToA}" Margin="0,0,11,0" FontWeight="SemiBold"/>
@@ -1020,17 +1021,21 @@
                     <TextBox Text="{Binding SendText, UpdateSourceTrigger=PropertyChanged}"
                              FontFamily="Consolas" FontSize="13" AcceptsReturn="True" Height="35"
                              TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="5,4"
+                             IsEnabled="{Binding IsNormalDataSendEnabled}"
                              ToolTip="输入需要发送的 HEX 或 ASCII 数据"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center">
                     <Button Content="{Binding SendBtnText}" Command="{Binding SendDataCommand}"
-                            Style="{StaticResource PrimaryButton}" Width="100" Height="32" FontSize="13"/>
+                            Style="{StaticResource PrimaryButton}" Width="100" Height="32" FontSize="13"
+                            IsEnabled="{Binding IsNormalDataSendEnabled}"
+                            ToolTip="保存 A-RX 或 B-RX 文件期间禁止发送普通数据"/>
                     <Button Content="{Binding FileSendButtonText}" Command="{Binding SendFileCommand}"
                             Width="100" Height="27" Margin="0,5,0,0" FontSize="12"
                             ToolTip="默认原样发送文件字节，兼容普通串口/网络助手和真实设备"/>
                 </StackPanel>
-                <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0,10,0">
+                <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0,10,0"
+                            IsEnabled="{Binding IsNormalDataSendEnabled}">
                     <!-- 上层：发送模式 (Hex / ASCII) -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="发送模式" Style="{StaticResource FieldLabel}" VerticalAlignment="Center"/>

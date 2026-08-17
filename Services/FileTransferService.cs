@@ -504,7 +504,9 @@ namespace WpfProtocolStudio.Services
                 state.Stream.Dispose();
                 state.Stream = null;
 
-                string extension = DetectFileExtension(partPath);
+                // 通用串口/网络裸字节流不携带原始文件名和后缀，统一使用 .log，
+                // 避免部分格式能识别、部分格式被保存为 .bin 所造成的不一致。
+                string extension = ".log";
                 string prefix = direction == DataDirection.ChannelA_Rx ? "A_RX" : "B_RX";
                 string fileName = $"{prefix}_{startedAt:yyyyMMdd_HHmmss_fff}{extension}";
                 string targetPath = CreateUniquePath(Path.GetDirectoryName(partPath), fileName);

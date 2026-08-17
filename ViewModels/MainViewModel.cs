@@ -197,6 +197,7 @@ namespace WpfProtocolStudio.ViewModels
                 {
                     _fileReceiver.ConfigureDirection(DataDirection.ChannelA_Rx, value, _rxFileDirectory);
                     _rawBurstFileReceiver.ConfigureDirection(DataDirection.ChannelA_Rx, value, _rxFileDirectory);
+                    UpdateReceiveFileCaptureState();
                 }
             }
         }
@@ -218,8 +219,37 @@ namespace WpfProtocolStudio.ViewModels
                 {
                     _fileReceiver.ConfigureDirection(DataDirection.ChannelB_Rx, value, _rxFileDirectory);
                     _rawBurstFileReceiver.ConfigureDirection(DataDirection.ChannelB_Rx, value, _rxFileDirectory);
+                    UpdateReceiveFileCaptureState();
                 }
             }
+        }
+
+        /// <summary>
+        /// 任一 RX 文件捕获开启时，仅允许使用“发送文件”，防止普通报文字节混入接收文件。
+        /// </summary>
+        public bool IsNormalDataSendEnabled => !SaveARxFile && !SaveBRxFile;
+
+        private void UpdateReceiveFileCaptureState()
+        {
+            OnPropertyChanged(nameof(IsNormalDataSendEnabled));
+
+            if (!IsNormalDataSendEnabled)
+            {
+                StopAutoSendTimer();
+                if (_isAutoSend)
+                {
+                    _isAutoSend = false;
+                    OnPropertyChanged(nameof(IsAutoSend));
+                }
+
+                SendStatusText = "文件接收捕获中：仅允许发送文件";
+            }
+            else if (!IsFileSending)
+            {
+                SendStatusText = "等待发送";
+            }
+
+            CommandManager.InvalidateRequerySuggested();
         }
 
         // 自动保存总开关 (FR-18)
@@ -1295,6 +1325,13 @@ namespace WpfProtocolStudio.ViewModels
         /// </summary>
         private async void ExecuteSendData()
         {
+            if (!IsNormalDataSendEnabled)
+            {
+                MessageBox.Show("正在保存 A-RX 或 B-RX 文件，不能发送普通数据。请先取消文件保存，或使用“发送文件”。",
+                    "文件接收中", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             if (IsFileSending)
             {
                 MessageBox.Show("文件发送期间不能插入普通数据，请先停止或等待文件发送完成。", "文件发送中", MessageBoxButton.OK, MessageBoxImage.Information);
