@@ -386,7 +386,9 @@ namespace WpfProtocolStudio.Services
             public long ReceivedBytes;
         }
 
-        private const int FileEndIdleMilliseconds = 2000;
+        // 裸字节流没有文件长度，只能用接收空闲判断结束。放宽到 5 秒，避免分包或串口节流
+        // 造成的短暂停顿把同一个 BIN/文档误保存成多个文件。
+        private const int FileEndIdleMilliseconds = 5000;
         private readonly Dictionary<DataDirection, RawReceiveState> _states =
             new Dictionary<DataDirection, RawReceiveState>
             {

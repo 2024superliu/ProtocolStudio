@@ -14,6 +14,9 @@ namespace WpfProtocolStudio.Channels
     internal class SerialPortChannel : ICommunicationChannel
     {
         private SerialPort _serialPort;
+        private readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1, 1);
+        private long _bytesReceived;
+        private long _bytesSent;
 
         public event EventHandler<ChannelDataReceivedEventArgs> DataReceived;
         public event EventHandler<ChannelStatus> StatusChanged;
@@ -22,8 +25,8 @@ namespace WpfProtocolStudio.Channels
         public ChannelType ChannelType => ChannelType.SerialPort;
         public ChannelStatus Status { get; private set; } = ChannelStatus.Disconnected;
 
-        public long BytesReceived { get; private set; }
-        public long BytesSent { get; private set; }
+        public long BytesReceived => Interlocked.Read(ref _bytesReceived);
+        public long BytesSent => Interlocked.Read(ref _bytesSent);
 
         public int LocalPort { get; set; } = 8080;
         ///<summary>
@@ -38,6 +41,8 @@ namespace WpfProtocolStudio.Channels
         // 默认串口接收缓冲通常只有约 4KB，无法承受 921600 波特率下的 8192B 分包。
         private const int SerialReadBufferSize = 1024 * 1024;
         private const int SerialWriteBufferSize = 64 * 1024;
+        // 小块写入并按线路速率节流，兼容接收缓冲较小的旧串口助手和虚拟串口驱动。
+        private const int MaximumWriteChunkSize = 1024;
 
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace WpfProtocolStudio.Channels
                     lock (_lockBuffer)
                     {
                         _rxBuffer.Write(buffer, 0, readBytes);
-                        BytesReceived += readBytes;
+                        Interlocked.Add(ref _bytesReceived, readBytes);
 
                         // 重置/刷新 15ms 断帧组包定时器
                         if (_frameTimer == null)
@@ -140,23 +145,79 @@ namespace WpfProtocolStudio.Channels
         /// <summary>
         /// 向串口写入字节数据
         /// </summary>
-        public Task<int> SendAsync(byte[] data)
+        public async Task<int> SendAsync(byte[] data)
         {
             if (Status != ChannelStatus.Connected || _serialPort == null || !_serialPort.IsOpen || data == null || data.Length == 0)
-                return Task.FromResult(0);
+                return 0;
 
+            await _sendLock.WaitAsync();
+            int sentTotal = 0;
             try
             {
-                // 调用原生 Write 方法同步写入驱动发送缓冲区
-                _serialPort.Write(data, 0, data.Length);
-                BytesSent += data.Length;
-                return Task.FromResult(data.Length);
+                SerialPort port = _serialPort;
+                if (Status != ChannelStatus.Connected || port == null || !port.IsOpen)
+                    return 0;
+
+                while (sentTotal < data.Length)
+                {
+                    if (Status != ChannelStatus.Connected || !port.IsOpen) break;
+
+                    int count = Math.Min(MaximumWriteChunkSize, data.Length - sentTotal);
+                    double expectedMilliseconds = CalculateTransmissionMilliseconds(port, count);
+                    var transmitTimer = System.Diagnostics.Stopwatch.StartNew();
+
+                    // Write 返回时数据通常只进入了系统/USB发送缓冲区。每次只提交小块数据，
+                    // 等驱动队列排空并补足理论线路时间后才继续，防止虚拟串口瞬间灌满对端缓冲。
+                    port.Write(data, sentTotal, count);
+                    if (!await WaitForTransmitDrainAsync(port, expectedMilliseconds))
+                    {
+                        System.Diagnostics.Debug.WriteLine("[串口发送超时]: 驱动发送队列未在预期时间内排空");
+                        break;
+                    }
+
+                    int remainingWireDelay = (int)Math.Ceiling(expectedMilliseconds - transmitTimer.Elapsed.TotalMilliseconds);
+                    if (remainingWireDelay > 0) await Task.Delay(remainingWireDelay);
+
+                    sentTotal += count;
+                    Interlocked.Add(ref _bytesSent, count);
+                }
+
+                return sentTotal;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[串口发送失败]: {ex.Message}");
-                return Task.FromResult(0);
+                return sentTotal;
             }
+            finally
+            {
+                _sendLock.Release();
+            }
+        }
+
+        private static double CalculateTransmissionMilliseconds(SerialPort port, int byteCount)
+        {
+            double stopBits = port.StopBits == StopBits.Two ? 2.0 :
+                port.StopBits == StopBits.OnePointFive ? 1.5 : 1.0;
+            double bitsPerByte = 1.0 + port.DataBits + (port.Parity == Parity.None ? 0.0 : 1.0) + stopBits;
+            return byteCount * bitsPerByte * 1000.0 / Math.Max(1, port.BaudRate);
+        }
+
+        private static async Task<bool> WaitForTransmitDrainAsync(SerialPort port, double expectedMilliseconds)
+        {
+            // 按理论线路时间留出三倍驱动余量，避免正常低波特率传输被误判为超时。
+            int timeoutMilliseconds = (int)Math.Min(120000,
+                Math.Max(3000, expectedMilliseconds * 3.0 + 1000.0));
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            while (port.IsOpen)
+            {
+                if (port.BytesToWrite <= 0) return true;
+                if (stopwatch.ElapsedMilliseconds >= timeoutMilliseconds) return false;
+                await Task.Delay(expectedMilliseconds >= 100.0 ? 5 : 1);
+            }
+
+            return false;
         }
         /// <summary>
         /// 关闭串口
@@ -189,8 +250,8 @@ namespace WpfProtocolStudio.Channels
         }
         public void ResetStatistics()
         {
-            BytesReceived = 0;
-            BytesSent = 0;
+            Interlocked.Exchange(ref _bytesReceived, 0);
+            Interlocked.Exchange(ref _bytesSent, 0);
         }
 
         private void UpdateStatus(ChannelStatus newStatus)

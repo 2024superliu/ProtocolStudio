@@ -1028,7 +1028,7 @@
                             Style="{StaticResource PrimaryButton}" Width="100" Height="32" FontSize="13"/>
                     <Button Content="{Binding FileSendButtonText}" Command="{Binding SendFileCommand}"
                             Width="100" Height="27" Margin="0,5,0,0" FontSize="12"
-                            ToolTip="发送带文件名和 SHA-256 校验的完整文件；接收端需运行本工具"/>
+                            ToolTip="默认原样发送文件字节，兼容普通串口/网络助手和真实设备"/>
                 </StackPanel>
                 <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0,10,0">
                     <!-- 上层：发送模式 (Hex / ASCII) -->

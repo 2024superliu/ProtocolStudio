@@ -769,7 +769,7 @@ namespace WpfProtocolStudio.ViewModels
 
         public string FileSendButtonText => IsFileSending ? "停止文件" : "发送文件";
 
-        private string _fileTransferStatus = "文件传输就绪";
+        private string _fileTransferStatus = "文件传输就绪（原始文件模式）";
         public string FileTransferStatus
         {
             get => _fileTransferStatus;
@@ -1459,14 +1459,11 @@ namespace WpfProtocolStudio.ViewModels
 
             try
             {
-                // 文件帧必须连续写入，发送期间暂停透明转发，避免其它数据插入文件正文。
+                // 文件数据必须连续写入，发送期间暂停透明转发，避免其它数据插入文件正文。
                 if (forwardingWasEnabled) IsForwarding = false;
 
                 var fileInfo = new FileInfo(dialog.FileName);
-                FileTransferStatus = $"正在校验：{fileInfo.Name}";
-                byte[] sha256 = await FileTransferProtocol.ComputeSha256Async(dialog.FileName, currentCts.Token);
-                byte[] header = FileTransferProtocol.CreateHeader(fileInfo.Name, fileInfo.Length, sha256);
-                await SendFileBlockAsync(header, targetName, currentCts.Token);
+                FileTransferStatus = $"准备发送原始文件：{fileInfo.Name}（不添加协议头）";
 
                 long sentTotal = 0;
                 byte[] buffer = new byte[16 * 1024];
@@ -1480,16 +1477,16 @@ namespace WpfProtocolStudio.ViewModels
                         await SendFileBlockAsync(block, targetName, currentCts.Token);
                         sentTotal += read;
                         double percentage = fileInfo.Length == 0 ? 100 : sentTotal * 100.0 / fileInfo.Length;
-                        FileTransferStatus = $"发送文件：{fileInfo.Name}  {percentage:0.0}% ({FormatFileSize(sentTotal)}/{FormatFileSize(fileInfo.Length)})";
+                        FileTransferStatus = $"发送原始文件：{fileInfo.Name}  {percentage:0.0}% ({FormatFileSize(sentTotal)}/{FormatFileSize(fileInfo.Length)})";
                         await Task.Yield();
                     }
                 }
 
-                FileTransferStatus = $"文件发送完成：{fileInfo.Name}（{FormatFileSize(fileInfo.Length)}）";
+                FileTransferStatus = $"原始文件发送完成：{fileInfo.Name}（{FormatFileSize(fileInfo.Length)}）";
             }
             catch (OperationCanceledException)
             {
-                FileTransferStatus = "文件发送已停止；接收端未完成文件保留为 .part";
+                FileTransferStatus = "原始文件发送已停止；对端已经收到的数据是不完整文件";
             }
             catch (Exception ex)
             {
