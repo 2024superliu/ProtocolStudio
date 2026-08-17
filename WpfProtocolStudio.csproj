@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1362822D-6AF9-40F7-BA73-C0AD1EE8E36E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WpfProtocolStudio</RootNamespace>
-    <AssemblyName>WpfProtocolStudio</AssemblyName>
+    <RootNamespace>ProtocolStudio</RootNamespace>
+    <AssemblyName>ProtocolStudio</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>7.3</LangVersion>
     <FileAlignment>512</FileAlignment>
@@ -144,9 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Plugins\README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Plugins\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ProtocolStudio.ico" />

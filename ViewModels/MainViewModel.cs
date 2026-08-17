@@ -50,6 +50,7 @@ namespace WpfProtocolStudio.ViewModels
         private readonly RawBurstFileReceiver _rawBurstFileReceiver = new RawBurstFileReceiver();
         private readonly DataFramingService _dataFramingService = new DataFramingService();
         private string _rxFileDirectory;
+        private string _protocolPluginDirectory;
         private string[] _historySelectedFiles = new string[0];
         private bool _disposed;
         // 4 个 UI 数据显示集合
@@ -2067,7 +2068,9 @@ namespace WpfProtocolStudio.ViewModels
         private void ReloadProtocolPlugins()
         {
             string selectedName = SelectedProtocolParser?.Name;
-            string pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+            string pluginDirectory = _protocolPluginDirectory;
+            bool hasSelectedDirectory = !string.IsNullOrWhiteSpace(pluginDirectory);
+            bool directoryExists = hasSelectedDirectory && Directory.Exists(pluginDirectory);
             ProtocolPluginLoadResult loadResult = ProtocolPluginService.Load(pluginDirectory);
 
             ProtocolParsers.Clear();
@@ -2077,7 +2080,15 @@ namespace WpfProtocolStudio.ViewModels
                 ?? ProtocolParsers.FirstOrDefault();
 
             string scanTime = DateTime.Now.ToString("HH:mm:ss");
-            if (loadResult.Errors.Count > 0)
+            if (!hasSelectedDirectory)
+            {
+                ProtocolPluginStatus = $"{scanTime} 已加载内置解析器；尚未选择外部插件目录。";
+            }
+            else if (!directoryExists)
+            {
+                ProtocolPluginStatus = $"{scanTime} 外部插件目录不存在，请重新选择：{pluginDirectory}";
+            }
+            else if (loadResult.Errors.Count > 0)
             {
                 ProtocolPluginStatus = $"{scanTime} 扫描完成：{loadResult.ScannedDllCount} 个DLL，成功加载 " +
                     $"{loadResult.LoadedExternalParserCount} 个外部解析器，失败 {loadResult.Errors.Count} 个：" +
@@ -2085,7 +2096,7 @@ namespace WpfProtocolStudio.ViewModels
             }
             else if (loadResult.ScannedDllCount == 0)
             {
-                ProtocolPluginStatus = $"{scanTime} 扫描完成：未发现外部插件DLL；当前可使用内置“Modbus RTU 解析器”和“通用字节解析”。";
+                ProtocolPluginStatus = $"{scanTime} 所选目录未发现插件DLL：{pluginDirectory}；当前使用内置解析器。";
             }
             else if (loadResult.LoadedExternalParserCount == 0)
             {
@@ -2100,10 +2111,31 @@ namespace WpfProtocolStudio.ViewModels
 
         private void ExecuteOpenProtocolPluginFolder()
         {
-            string pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
-            Directory.CreateDirectory(pluginDirectory);
-            System.Diagnostics.Process.Start("explorer.exe", pluginDirectory);
-            ProtocolPluginStatus = $"插件目录：{pluginDirectory}；把插件DLL放入后点击“重新加载插件”。";
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                dialog.Description = "请选择一个已经存在的协议插件文件夹";
+                dialog.ShowNewFolderButton = false;
+                if (!string.IsNullOrWhiteSpace(_protocolPluginDirectory) && Directory.Exists(_protocolPluginDirectory))
+                    dialog.SelectedPath = _protocolPluginDirectory;
+
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                if (!Directory.Exists(dialog.SelectedPath))
+                {
+                    ProtocolPluginStatus = "选择失败：插件目录不存在。";
+                    return;
+                }
+
+                _protocolPluginDirectory = dialog.SelectedPath;
+                ReloadProtocolPlugins();
+                try
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", _protocolPluginDirectory);
+                }
+                catch (Exception ex)
+                {
+                    ProtocolPluginStatus += $" 无法打开资源管理器：{ex.Message}";
+                }
+            }
         }
 
         private void ExecuteParseProtocol()

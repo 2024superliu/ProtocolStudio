@@ -920,8 +920,9 @@
                                         <ComboBox ItemsSource="{Binding ProtocolParsers}" SelectedItem="{Binding SelectedProtocolParser}"
                                                   DisplayMemberPath="Name" Width="190" Margin="0,0,8,0"/>
                                         <Button Content="重新加载插件" Command="{Binding ReloadProtocolPluginsCommand}" MinHeight="27" Padding="9,3"/>
-                                        <Button Content="打开插件目录" Command="{Binding OpenProtocolPluginFolderCommand}"
-                                                MinHeight="27" Padding="9,3" Margin="6,0,0,0"/>
+                                        <Button Content="选择插件目录" Command="{Binding OpenProtocolPluginFolderCommand}"
+                                                MinHeight="27" Padding="9,3" Margin="6,0,0,0"
+                                                ToolTip="选择一个已经存在的插件文件夹；程序不会自动创建目录"/>
                                         <CheckBox Content="实时解析" IsChecked="{Binding IsRealtimeProtocolParsingEnabled}"
                                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="SemiBold" Foreground="#138568"/>
                                     </WrapPanel>

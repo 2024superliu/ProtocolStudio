@@ -18,7 +18,7 @@ namespace WpfProtocolStudio.Services
     }
 
     /// <summary>
-    /// FR-29：从Plugins目录发现并实例化IProtocolParser实现。
+    /// FR-29：从用户指定的现有目录发现并实例化IProtocolParser实现。
     /// </summary>
     public static class ProtocolPluginService
     {
@@ -28,15 +28,18 @@ namespace WpfProtocolStudio.Services
             result.Parsers.Add(new ModbusRtuProtocolParser());
             result.Parsers.Add(new RawBytesProtocolParser());
 
+            // 未指定目录或目录已不存在时只返回内置解析器，不在磁盘上创建任何目录。
+            if (string.IsNullOrWhiteSpace(pluginDirectory) || !Directory.Exists(pluginDirectory))
+                return result;
+
             try
             {
-                Directory.CreateDirectory(pluginDirectory);
                 foreach (string filePath in Directory.GetFiles(pluginDirectory, "*.dll"))
                 {
                     result.ScannedDllCount++;
                     try
                     {
-                        // 从字节加载，避免锁住Plugins目录中的原始DLL；运行中可覆盖同名插件后重新加载。
+                        // 从字节加载，避免锁住用户插件目录中的原始DLL；运行中可覆盖同名插件后重新加载。
                         Assembly assembly = Assembly.Load(File.ReadAllBytes(filePath));
                         foreach (Type type in GetLoadableTypes(assembly))
                         {
