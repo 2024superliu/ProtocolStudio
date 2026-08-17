@@ -25,6 +25,7 @@ namespace WpfProtocolStudio.Services
         public static ProtocolPluginLoadResult Load(string pluginDirectory)
         {
             var result = new ProtocolPluginLoadResult();
+            result.Parsers.Add(new ModbusRtuProtocolParser());
             result.Parsers.Add(new RawBytesProtocolParser());
 
             try

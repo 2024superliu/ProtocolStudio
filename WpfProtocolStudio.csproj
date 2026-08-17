@@ -82,6 +82,7 @@
     <Compile Include="Services\MessageTemplateManager.cs" />
     <Compile Include="Services\DataFramingService.cs" />
     <Compile Include="Services\ChecksumService.cs" />
+    <Compile Include="Services\ModbusRtuProtocolParser.cs" />
     <Compile Include="Services\ProtocolPluginService.cs" />
     
     <Compile Include="ViewModels\MainViewModel.cs" />

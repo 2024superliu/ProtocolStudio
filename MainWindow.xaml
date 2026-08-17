@@ -313,7 +313,7 @@
                         <MenuItem Header="BIN 结构化二进制格式 (.bin)" IsCheckable="True" IsChecked="{Binding IsAutoSaveBin}"/>
                     </MenuItem>
                     <MenuItem Header="选择自动保存日志文件夹" Command="{Binding SelectAutoSaveLogDirectoryCommand}"/>
- 
+
                     <Separator/>
                     <MenuItem Header="清空显示记录" Command="{Binding ClearRecordsCommand}"/>
                 </MenuItem>
@@ -531,199 +531,199 @@
         <!-- 实时数据与历史日志搜索 -->
         <TabControl Grid.Row="2" Margin="18,0,18,12" Background="Transparent" BorderThickness="0" Padding="0">
             <TabItem Header="实时数据">
-        <Grid Margin="0,8,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+                <Grid Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-            <GridSplitter Grid.Column="1" Grid.RowSpan="3" Width="4" HorizontalAlignment="Center"
+                    <GridSplitter Grid.Column="1" Grid.RowSpan="3" Width="4" HorizontalAlignment="Center"
                           Background="#D4DCE7" ShowsPreview="True"/>
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" VerticalAlignment="Center"
+                    <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="4" VerticalAlignment="Center"
                           Background="#D4DCE7" ShowsPreview="True"/>
 
-            <GroupBox Grid.Row="0" Grid.Column="0" Style="{StaticResource DataGroupBox}">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="A · RX" Foreground="{StaticResource ChannelABrush}" Style="{StaticResource PanelHeader}"/>
-                        <TextBlock Text="  接收数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
-                        <CheckBox Content="保存A-RX日志" IsChecked="{Binding SaveARxLog}" Margin="10,0,8,0"/>
-                        <CheckBox Content="保存A-RX文件" IsChecked="{Binding SaveARxFile}" Margin="10,0,8,0"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <ListView ItemsSource="{Binding ChannelARxRecords}" AlternationCount="2"
+                    <GroupBox Grid.Row="0" Grid.Column="0" Style="{StaticResource DataGroupBox}">
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="A · RX" Foreground="{StaticResource ChannelABrush}" Style="{StaticResource PanelHeader}"/>
+                                <TextBlock Text="  接收数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
+                                <CheckBox Content="保存A-RX日志" IsChecked="{Binding SaveARxLog}" Margin="10,0,8,0"/>
+                                <CheckBox Content="保存A-RX文件" IsChecked="{Binding SaveARxFile}" Margin="10,0,8,0"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+                        <ListView ItemsSource="{Binding ChannelARxRecords}" AlternationCount="2"
                           helpers:AutoScrollHelper.AutoScroll="True"
                           helpers:GridViewColumnResizeBehavior.IsEnabled="True"
                           helpers:GridViewColumnResizeBehavior.ColumnWeights="2,1,8"
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,48,160"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
-                                    <Setter Property="Background" Value="#EAF8F0"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
-                                    <Setter Property="Background" Value="#FDECEC"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
-                            <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
-                            <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Consolas" Foreground="#3559CE" TextWrapping="NoWrap">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{StaticResource RecordFormatConverter}">
-                                                    <Binding/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </GroupBox>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
+                                            <Setter Property="Background" Value="#EAF8F0"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
+                                            <Setter Property="Background" Value="#FDECEC"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
+                                    <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
+                                    <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontFamily="Consolas" Foreground="#3559CE" TextWrapping="NoWrap">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource RecordFormatConverter}">
+                                                            <Binding/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
 
-            <GroupBox Grid.Row="2" Grid.Column="0" Style="{StaticResource DataGroupBox}">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="A · TX" Foreground="{StaticResource ChannelABrush}" Style="{StaticResource PanelHeader}"/>
-                        <TextBlock Text="  发送数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
-                        <CheckBox Content="保存A-TX日志" IsChecked="{Binding SaveATxLog}" Margin="10,0,8,0"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <ListView ItemsSource="{Binding ChannelATxRecords}" AlternationCount="2"
+                    <GroupBox Grid.Row="2" Grid.Column="0" Style="{StaticResource DataGroupBox}">
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="A · TX" Foreground="{StaticResource ChannelABrush}" Style="{StaticResource PanelHeader}"/>
+                                <TextBlock Text="  发送数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
+                                <CheckBox Content="保存A-TX日志" IsChecked="{Binding SaveATxLog}" Margin="10,0,8,0"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+                        <ListView ItemsSource="{Binding ChannelATxRecords}" AlternationCount="2"
                           helpers:AutoScrollHelper.AutoScroll="True"
                           helpers:GridViewColumnResizeBehavior.IsEnabled="True"
                           helpers:GridViewColumnResizeBehavior.ColumnWeights="2,2,1,7"
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,82,48,140"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
-                            <GridViewColumn Header="来源 / 备注" DisplayMemberBinding="{Binding Description}"/>
-                            <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
-                            <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Consolas" Foreground="#3559CE" TextWrapping="NoWrap">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{StaticResource RecordFormatConverter}">
-                                                    <Binding/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </GroupBox>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
+                                    <GridViewColumn Header="来源 / 备注" DisplayMemberBinding="{Binding Description}"/>
+                                    <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
+                                    <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontFamily="Consolas" Foreground="#3559CE" TextWrapping="NoWrap">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource RecordFormatConverter}">
+                                                            <Binding/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
 
-            <GroupBox Grid.Row="0" Grid.Column="2" Style="{StaticResource DataGroupBox}">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="B · RX" Foreground="{StaticResource ChannelBBrush}" Style="{StaticResource PanelHeader}"/>
-                        <TextBlock Text="  接收数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
-                        <CheckBox Content="保存B-RX日志" IsChecked="{Binding SaveBRxLog}" Margin="10,0,8,0"/>
-                        <CheckBox Content="保存B-RX文件" IsChecked="{Binding SaveBRxFile}" Margin="10,0,8,0"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <ListView ItemsSource="{Binding ChannelBRxRecords}" AlternationCount="2"
+                    <GroupBox Grid.Row="0" Grid.Column="2" Style="{StaticResource DataGroupBox}">
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="B · RX" Foreground="{StaticResource ChannelBBrush}" Style="{StaticResource PanelHeader}"/>
+                                <TextBlock Text="  接收数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
+                                <CheckBox Content="保存B-RX日志" IsChecked="{Binding SaveBRxLog}" Margin="10,0,8,0"/>
+                                <CheckBox Content="保存B-RX文件" IsChecked="{Binding SaveBRxFile}" Margin="10,0,8,0"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+                        <ListView ItemsSource="{Binding ChannelBRxRecords}" AlternationCount="2"
                           helpers:AutoScrollHelper.AutoScroll="True"
                           helpers:GridViewColumnResizeBehavior.IsEnabled="True"
                           helpers:GridViewColumnResizeBehavior.ColumnWeights="2,1,8"
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,48,160"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
-                                    <Setter Property="Background" Value="#EAF8F0"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
-                                    <Setter Property="Background" Value="#FDECEC"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
-                            <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
-                            <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Consolas" Foreground="#138568" TextWrapping="NoWrap">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{StaticResource RecordFormatConverter}">
-                                                    <Binding/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </GroupBox>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsChecksumValid}" Value="True">
+                                            <Setter Property="Background" Value="#EAF8F0"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsChecksumValid}" Value="False">
+                                            <Setter Property="Background" Value="#FDECEC"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
+                                    <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
+                                    <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontFamily="Consolas" Foreground="#138568" TextWrapping="NoWrap">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource RecordFormatConverter}">
+                                                            <Binding/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
 
-            <GroupBox Grid.Row="2" Grid.Column="2" Style="{StaticResource DataGroupBox}">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="B · TX" Foreground="{StaticResource ChannelBBrush}" Style="{StaticResource PanelHeader}"/>
-                        <TextBlock Text="  发送数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
-                        <CheckBox Content="保存B-TX日志" IsChecked="{Binding SaveBTxLog}" Margin="10,0,8,0"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <ListView ItemsSource="{Binding ChannelBTxRecords}" AlternationCount="2"
+                    <GroupBox Grid.Row="2" Grid.Column="2" Style="{StaticResource DataGroupBox}">
+                        <GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="B · TX" Foreground="{StaticResource ChannelBBrush}" Style="{StaticResource PanelHeader}"/>
+                                <TextBlock Text="  发送数据" Foreground="{StaticResource MutedTextBrush}" FontWeight="Normal"/>
+                                <CheckBox Content="保存B-TX日志" IsChecked="{Binding SaveBTxLog}" Margin="10,0,8,0"/>
+                            </StackPanel>
+                        </GroupBox.Header>
+                        <ListView ItemsSource="{Binding ChannelBTxRecords}" AlternationCount="2"
                           helpers:AutoScrollHelper.AutoScroll="True"
                           helpers:GridViewColumnResizeBehavior.IsEnabled="True"
                           helpers:GridViewColumnResizeBehavior.ColumnWeights="2,2,1,7"
                           helpers:GridViewColumnResizeBehavior.MinimumWidths="86,82,48,140"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Recycling">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
-                            <GridViewColumn Header="来源 / 备注" DisplayMemberBinding="{Binding Description}"/>
-                            <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
-                            <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Consolas" Foreground="#138568" TextWrapping="NoWrap">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{StaticResource RecordFormatConverter}">
-                                                    <Binding/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </GroupBox>
-        </Grid>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="时间" DisplayMemberBinding="{Binding TimeString}"/>
+                                    <GridViewColumn Header="来源 / 备注" DisplayMemberBinding="{Binding Description}"/>
+                                    <GridViewColumn Header="长度" DisplayMemberBinding="{Binding Length}"/>
+                                    <GridViewColumn Header="{Binding DataContext.SelectDisplayFormat, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource EnumDisplayConverter}, ConverterParameter=DataHeader}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock FontFamily="Consolas" Foreground="#138568" TextWrapping="NoWrap">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource RecordFormatConverter}">
+                                                            <Binding/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+                </Grid>
             </TabItem>
 
             <TabItem Header="历史数据">
@@ -818,7 +818,7 @@
             </TabItem>
 
             <TabItem Header="协议辅助">
-                <ScrollViewer Margin="0,8,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" Width="1284">
                     <StackPanel>
                         <GroupBox Header="数据流分帧显示" Margin="0,0,0,10">
                             <StackPanel>
@@ -839,17 +839,10 @@
 
                                     <TextBlock Text="空闲间隔" VerticalAlignment="Center" Style="{StaticResource FieldLabel}"/>
                                     <TextBox Text="{Binding FrameIdleMilliseconds}" Width="75" Margin="0,0,4,0"/>
-                                    <TextBlock Text="ms" Margin="0,0,14,0"/>
-
-                                    <Button Content="输出剩余数据" Command="{Binding FlushFramesCommand}"
-                                            MinHeight="28" Padding="10,4"/>
+                                    <TextBlock Text="ms"/>
                                 </WrapPanel>
                                 <Border Background="#F4F7FB" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,7">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding FrameConfigurationStatus}" Foreground="#334155" FontWeight="SemiBold"/>
-                                        <TextBlock Text="分帧结果显示在实时数据页对应区域。分隔符不存在或固定长度不足时，缓存会在达到空闲间隔后自动输出，也可点击“输出剩余数据”立即输出。注意：文本 01 是字节 30 31；匹配单字节 01 请选 HEX。"
-                                                   Foreground="{StaticResource MutedTextBrush}" Margin="0,3,0,0" TextWrapping="Wrap"/>
-                                    </StackPanel>
+                                    <TextBlock Text="{Binding FrameConfigurationStatus}" Foreground="#334155" FontWeight="SemiBold"/>
                                 </Border>
                             </StackPanel>
                         </GroupBox>
@@ -962,11 +955,13 @@
                                             <DataGridTextColumn Header="时间" Binding="{Binding TimeString}" Width="92"/>
                                             <DataGridTextColumn Header="方向" Binding="{Binding DirectionText}" Width="67"/>
                                             <DataGridTextColumn Header="解析器" Binding="{Binding ParserName}" Width="110"/>
-                                            <DataGridTextColumn Header="解析结果" Binding="{Binding DisplayText}" Width="*">
+                                            <DataGridTextColumn Header="解析结果" Binding="{Binding DisplayText}"
+                                                                Width="SizeToCells" MinWidth="360">
                                                 <DataGridTextColumn.ElementStyle>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="ToolTip" Value="{Binding RawHex}"/>
-                                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                                        <Setter Property="TextWrapping" Value="NoWrap"/>
+                                                        <Setter Property="TextTrimming" Value="None"/>
                                                     </Style>
                                                 </DataGridTextColumn.ElementStyle>
                                             </DataGridTextColumn>

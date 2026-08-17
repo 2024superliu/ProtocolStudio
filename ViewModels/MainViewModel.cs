@@ -458,7 +458,7 @@ namespace WpfProtocolStudio.ViewModels
             }
         }
         public string SelectedProtocolParserDescription => SelectedProtocolParser?.Description ?? "请选择协议解析器";
-        private string _protocolInput = "01 03 00 00 00 02";
+        private string _protocolInput = "01 03 00 00 00 02 C4 0B";
         public string ProtocolInput { get => _protocolInput; set => SetProperty(ref _protocolInput, value); }
         private bool _isProtocolInputHex = true;
         public bool IsProtocolInputHex
@@ -2085,7 +2085,7 @@ namespace WpfProtocolStudio.ViewModels
             }
             else if (loadResult.ScannedDllCount == 0)
             {
-                ProtocolPluginStatus = $"{scanTime} 扫描完成：未发现外部插件DLL；当前仅有内置“通用字节解析”。";
+                ProtocolPluginStatus = $"{scanTime} 扫描完成：未发现外部插件DLL；当前可使用内置“Modbus RTU 解析器”和“通用字节解析”。";
             }
             else if (loadResult.LoadedExternalParserCount == 0)
             {
@@ -2245,7 +2245,7 @@ namespace WpfProtocolStudio.ViewModels
         {
             IProtocolParser parser = SelectedProtocolParser;
             if (!IsRealtimeProtocolParsingEnabled || parser == null || frame?.Data == null) return;
-
+            if(frame.Direction!=DataDirection.ChannelA_Rx&&frame.Direction!=DataDirection.ChannelB_Rx) return;
             while (Volatile.Read(ref _protocolParseQueueCount) >= MaxPendingProtocolParses &&
                    _protocolParseQueue.TryDequeue(out _))
             {
