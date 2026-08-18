@@ -3,8 +3,8 @@
 1. 新建 `.NET Framework 4.8` 类库项目。
 2. 引用 `WpfProtocolStudio.exe`。
 3. 实现 `WpfProtocolStudio.Interfaces.IProtocolParser`，并提供公共无参构造函数。
-4. 编译后把插件 DLL 放入程序目录的 `Plugins` 文件夹。
-5. 在“协议辅助”页点击“重新加载插件”。
+4. 把插件 DLL 放入任意一个已经存在的文件夹。
+5. 在“协议辅助”页点击“选择插件目录”并选择该文件夹；替换 DLL 后可点击“重新加载插件”。
 
 ```csharp
 using WpfProtocolStudio.Interfaces;
